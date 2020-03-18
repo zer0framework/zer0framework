@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+<Configure id="Server" class="org.eclipse.jetty.server.Server">
+  <New id="jdbc/zer0frameworkDB" class="org.eclipse.jetty.plus.jndi.Resource">
+    <Arg></Arg>
+    <Arg>jdbc/zer0frameworkDB</Arg>
+    <Arg>
+      <New class="com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource">
+        <Set name="URL">jdbc:mysql://cts06393754:3306/zer0framework</Set>
+        <Set name="User">zer0framework</Set>
+        <Set name="Password">zer0framework</Set>        
+      </New>
+    </Arg>
+  </New>
+</Configure>
