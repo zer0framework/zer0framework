@@ -47,8 +47,6 @@ public class UserAuthFilter implements Filter {
 			String username = splited[0];
 
 			request.getServletContext().setAttribute("username", username);
-
-			System.out.println(decrypted);
 	    }
 		filterChain.doFilter(request, response);
 	}
