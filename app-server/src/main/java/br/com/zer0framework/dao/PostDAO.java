@@ -1,7 +1,6 @@
 package br.com.zer0framework.dao;
 
 import br.com.zer0framework.model.Post;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +41,7 @@ public class PostDAO {
 	}
 
 	protected List<Post> getPostsFromResultSet(PreparedStatement ps) throws SQLException {
+
 		final List<Post> result = new ArrayList<>();
 
 		try (ResultSet rs = ps.executeQuery()) {

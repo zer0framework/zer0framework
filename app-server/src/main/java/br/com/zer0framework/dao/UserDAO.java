@@ -83,12 +83,13 @@ public class UserDAO {
 	}
 
 	public void insert(User user) throws SQLException {
-		if (user.getId() == null) {
-			throw new IllegalArgumentException("User is null, not possible to insert!");
+		if (user.getPersonId() == null) {
+			throw new IllegalArgumentException("Person is null, not possible to insert!");
 		}
-		if (user.getId() == null) {
+		/*if (user.getId() == null) {
 			throw new IllegalArgumentException("User id is NOT null, try update!");
-		}
+		}*/
+
 		String sql = "insert into user (ds_username, ds_password, cd_person, dh_created) values (?, ?, ?, current_timestamp());";
 		
 		try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {

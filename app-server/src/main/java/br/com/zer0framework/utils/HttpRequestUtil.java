@@ -36,7 +36,6 @@ public class HttpRequestUtil {
                 }
             }
         }
-
         body = stringBuilder.toString();
         return body;
     }

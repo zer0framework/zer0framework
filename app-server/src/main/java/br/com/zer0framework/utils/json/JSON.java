@@ -288,4 +288,20 @@ public class JSON {
         return this.obj;
     }
 
+    public static Map<String, Object> parseToMap(String json){
+
+        String parsedJson = parse(json).toString();
+        String x = parsedJson.substring(2, parsedJson.length() - 2);
+        String[] y = x.split(", ");
+
+        Map<String, Object> map = new HashMap<>();
+
+        int i = 0;
+        for(Object o : y){
+           String[] s = y[i].split("=");
+           map.put(s[0],s[1]);
+           i++;
+        }
+        return map;
+    }
 }

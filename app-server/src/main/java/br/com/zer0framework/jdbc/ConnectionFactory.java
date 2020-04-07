@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 public final class ConnectionFactory {
 	
 	/**
-	 * Hide constructor
+			* Hide constructor
 	 */
 	private ConnectionFactory() {
 		// Nothing to do

@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import br.com.zer0framework.utils.security.SecurityUtil;
 import br.com.zer0framework.utils.HttpHeaders;
 
-@WebFilter(filterName = "userAuthFilter", urlPatterns = "/api/*")
+//@WebFilter(filterName = "userAuthFilter", urlPatterns = "/api/*")
 public class UserAuthFilter implements Filter {
 	static Statement consulta = null;
 	static ResultSet tabela = null;

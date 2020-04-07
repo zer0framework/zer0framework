@@ -5,16 +5,20 @@ import br.com.zer0framework.jdbc.ConnectionFactory;
 import br.com.zer0framework.model.User;
 import br.com.zer0framework.utils.HttpRequestUtil;
 import br.com.zer0framework.utils.json.JSON;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
 import java.sql.Connection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +43,7 @@ public class UserServlet extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		final PrintWriter out = response.getWriter();
-		response.setContentType("json/application");
+		response.setContentType("application/json");
 
 		final String[] split = request.getPathInfo() == null ? null : request.getPathInfo().split("/");
 		Integer id = null;
@@ -120,28 +124,37 @@ public class UserServlet extends HttpServlet{
 			throws ServletException, IOException {
 
 		final PrintWriter out = response.getWriter();
-		response.setContentType("text/html");
+		response.setContentType("application/json");
 
 		try(Connection conn = ConnectionFactory.getConnection(false)){
 			try{
 				final UserDAO userDAO = new UserDAO(conn);
 				final String json = HttpRequestUtil.getBody(request);
-				System.out.println(json);
-				Map<String, Object> parsedMap = (Map<String, Object>) JSON.parse(json);
-				// TODO 1 persist the current user based on the converted values
-				// TODO 2 adjust JSON converter to convert to the desired object
+
+				Map<String, Object> parsedMap = JSON.parseToMap(json);
+
+				User user = new User();
+
+				user.setPassword((String) parsedMap.get("password"));
+
+				user.setPersonId( Integer.valueOf( (String) parsedMap.get("personId")));
+
+				user.setUsername((String) parsedMap.get("username"));
+
+				userDAO.insert(user);
+				response.setStatus(201);
+
 			} catch (Exception e){
-				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				e.printStackTrace();
 				conn.rollback();
 			}
-			
+
 		} catch (Exception e){
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			e.printStackTrace();		
 		}
 	}
-	
 	/**
 	 * Excluir usuario
 	 */
@@ -154,7 +167,7 @@ public class UserServlet extends HttpServlet{
 			Integer id = null;
 
 			final PrintWriter out = response.getWriter();
-			response.setContentType("text/html");
+			response.setContentType("application/json");
 	
 			try(Connection conn = ConnectionFactory.getConnection(false)) {
 				try{
@@ -178,4 +191,6 @@ public class UserServlet extends HttpServlet{
 			e.printStackTrace();
 		}
 	}
+
+	//TODO doPut
 }

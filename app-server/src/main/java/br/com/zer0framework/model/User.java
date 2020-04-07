@@ -10,6 +10,18 @@ public class User {
     private Integer personId;
     private Date created;
 
+    public User(Integer id, String username, String password, Integer personId, Date created) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.personId = personId;
+        this.created = created;
+    }
+
+    public User() {
+
+    }
+
     public Integer getId() {
         return id;
     }

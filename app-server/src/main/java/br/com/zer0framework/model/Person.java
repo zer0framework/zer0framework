@@ -8,6 +8,18 @@ public class Person {
 	private Date birthdate;
 	private String job;
 
+	public Person() {
+	}
+
+	public Person(Integer id, String name, Date birthdate, String job, Integer managerPersonId, Date created) {
+		this.id = id;
+		this.name = name;
+		this.birthdate = birthdate;
+		this.job = job;
+		this.managerPersonId = managerPersonId;
+		this.created = created;
+	}
+
 	public Date getCreated() {
 		return created;
 	}

@@ -32,7 +32,7 @@ public class PostServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		final PrintWriter out = response.getWriter();
-		response.setContentType("json/application");
+		response.setContentType("application/json");
 
 		final String[] split = request.getPathInfo() == null ? null : request.getPathInfo().split("/");
 		Integer id = null;
@@ -72,7 +72,7 @@ public class PostServlet extends HttpServlet {
 	}
 
 	private void doGetById(HttpServletResponse response, PrintWriter out, Integer id) {
-		try(Connection conn = ConnectionFactory.getConnection(false)){
+		try (Connection conn = ConnectionFactory.getConnection(false)) {
 			final PostDAO postDAO = new PostDAO(conn);
 
 			final Post post = postDAO.findById(id);
@@ -80,10 +80,12 @@ public class PostServlet extends HttpServlet {
 
 			out.print(json);
 			out.flush();
-		} catch (Exception e){
+		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			out.print(e.getMessage());
 			out.flush();
 		}
 	}
+
+	//TODO doPost, doPut, doDelete
 }
