@@ -1,7 +1,6 @@
 package br.com.zer0framework.servlet;
 
 import br.com.zer0framework.dao.PersonDAO;
-import br.com.zer0framework.dao.UserDAO;
 import br.com.zer0framework.jdbc.ConnectionFactory;
 import br.com.zer0framework.model.Person;
 import br.com.zer0framework.utils.HttpRequestUtil;
@@ -14,11 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +53,7 @@ public class PersonServlet extends HttpServlet {
     }
 
     public void doGetById(HttpServletResponse resp, PrintWriter pw, Integer id){
-       try(Connection conn = ConnectionFactory.getConnection(false)) {
+       try(Connection conn = ConnectionFactory.getConnection()) {
            final PersonDAO personDAO = new PersonDAO(conn);
 
            final Person person = personDAO.findById(id);
@@ -73,7 +69,7 @@ public class PersonServlet extends HttpServlet {
 
     }
     public void doGetAll(HttpServletResponse resp, PrintWriter pw){
-        try(Connection conn = ConnectionFactory.getConnection(false)){
+        try(Connection conn = ConnectionFactory.getConnection()){
             final PersonDAO personDAO = new PersonDAO(conn);
 
             final List<Person> personList = personDAO.findAll();
@@ -125,7 +121,7 @@ public class PersonServlet extends HttpServlet {
                 personDAO.insert(new Person(
                         null,
                         (String) map.get("name"),
-                        new Date (new SimpleDateFormat("yyyy/MM/dd").parse( (String) map.get("birthdate") ).getTime()),
+                         new SimpleDateFormat("yyyy/MM/dd").parse( (String) map.get("birthdate")),
                         // se alguem souber um jeito mais simples de fazer isso, vá em frente
                         (String) map.get("job"),
                         i,

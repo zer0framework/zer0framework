@@ -5,20 +5,19 @@ import br.com.zer0framework.jdbc.ConnectionFactory;
 import br.com.zer0framework.model.User;
 import br.com.zer0framework.utils.HttpRequestUtil;
 import br.com.zer0framework.utils.json.JSON;
+import br.com.zer0framework.utils.security.AuthenticationUtil;
+import jdk.nashorn.api.scripting.ScriptUtils;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.beans.BeanInfo;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
+
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Method;
 import java.sql.Connection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -126,7 +125,7 @@ public class UserServlet extends HttpServlet{
 		final PrintWriter out = response.getWriter();
 		response.setContentType("application/json");
 
-		try(Connection conn = ConnectionFactory.getConnection(false)){
+		try(Connection conn = ConnectionFactory.getConnection(true)){
 			try{
 				final UserDAO userDAO = new UserDAO(conn);
 				final String json = HttpRequestUtil.getBody(request);
@@ -135,7 +134,10 @@ public class UserServlet extends HttpServlet{
 
 				User user = new User();
 
-				user.setPassword((String) parsedMap.get("password"));
+				String plainPassword = (String) parsedMap.get("password");
+				String hashedPassword = AuthenticationUtil.generatePasswordHash(plainPassword);
+
+				user.setPassword(hashedPassword);
 
 				user.setPersonId( Integer.valueOf( (String) parsedMap.get("personId")));
 
@@ -161,14 +163,18 @@ public class UserServlet extends HttpServlet{
 	@Override
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		response.setContentType("application/json");
+		final PrintWriter out = response.getWriter();
+		Integer id = null;
 		try {
-			// TODO retrieve id from url path
-			Integer id = null;
+			String[] x = request.getRequestURI().split("/");
+			try{
+			id = Integer.valueOf(x[3]);
+			}catch (IndexOutOfBoundsException e){
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				out.print("Id must be informed");
+			}
 
-			final PrintWriter out = response.getWriter();
-			response.setContentType("application/json");
-	
 			try(Connection conn = ConnectionFactory.getConnection(false)) {
 				try{
 					final UserDAO userDAO = new UserDAO(conn);
@@ -178,14 +184,13 @@ public class UserServlet extends HttpServlet{
 						response.setStatus(HttpServletResponse.SC_OK);	
 					} else {
 						response.setStatus(HttpServletResponse.SC_NOT_FOUND);					
-					};
+					}
 
 				} catch (Exception e) {
 					conn.rollback();
 					throw e;
 				}
 			}
-
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			e.printStackTrace();

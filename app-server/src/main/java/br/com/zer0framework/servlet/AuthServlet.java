@@ -43,7 +43,7 @@ public class AuthServlet extends HttpServlet {
 		final String username = request.getParameter("username");
 		final String password = request.getParameter("password");
 
-		try (Connection conn = ConnectionFactory.getConnection(false)) {
+		try (Connection conn = ConnectionFactory.getConnection()) {
 			try {
 				final UserDAO userDao = new UserDAO(conn);
 				final User user = userDao.findByUsername(username);

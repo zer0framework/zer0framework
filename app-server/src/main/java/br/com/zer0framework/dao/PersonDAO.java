@@ -1,13 +1,10 @@
 package br.com.zer0framework.dao;
 
 import br.com.zer0framework.model.Person;
-import br.com.zer0framework.model.User;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO to be implemented
 public class PersonDAO {
 
     private Connection connection;
@@ -48,7 +45,7 @@ public class PersonDAO {
             ps.setString(1, username);
             List<Person> usersFromResultSet = (List<Person>) getDataFromResultSet(ps);
             if (!usersFromResultSet.isEmpty()) {
-                final Person obj = (Person) usersFromResultSet.get(0);
+                final Person obj = usersFromResultSet.get(0);
                 if (obj != null) {
                     result = obj;
                 }
