@@ -3,7 +3,7 @@
  *
  * Manages the data of the application.
  */
-class Model {
+class TodoModel {
 
   constructor() {
     this.todos = JSON.parse(localStorage.getItem('todos')) || [];

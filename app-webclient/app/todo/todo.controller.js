@@ -6,7 +6,7 @@
  * @param model
  * @param view
  */
-class Controller {
+class TodoController {
   
   constructor(model, view) {
     this.model = model
@@ -52,4 +52,4 @@ class Controller {
 
 }
 
-const todoController = new Controller(new Model(), new View());
+const todoController = new TodoController(new TodoModel(), new TodoView());

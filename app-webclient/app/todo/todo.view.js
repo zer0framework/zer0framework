@@ -3,7 +3,7 @@
  *
  * Visual representation of the model.
  */
-class View {
+class TodoView {
   todoForm;
   
   constructor() { }
