@@ -1,10 +1,14 @@
 package br.com.zer0framework.utils;
 
+import sun.misc.IOUtils;
+import sun.nio.ch.IOUtil;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import javax.servlet.http.Part;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 public class HttpRequestUtil {
 
@@ -38,5 +42,20 @@ public class HttpRequestUtil {
         }
         body = stringBuilder.toString();
         return body;
+    }
+
+    public static String getFile(HttpServletRequest request) throws IOException, ServletException {
+        Part part = request.getPart("file");
+
+        InputStream imp = part.getInputStream();
+        byte[] x = null;
+
+        try {
+            x = IOUtils.readFully(imp, imp.available(), true);
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return new String(x, StandardCharsets.UTF_8);
     }
 }

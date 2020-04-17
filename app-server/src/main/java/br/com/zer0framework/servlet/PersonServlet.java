@@ -121,7 +121,9 @@ public class PersonServlet extends HttpServlet {
                 personDAO.insert(new Person(
                         null,
                         (String) map.get("name"),
-                         new SimpleDateFormat("yyyy/MM/dd").parse( (String) map.get("birthdate")),
+                         new SimpleDateFormat("yyyy/MM/dd").parse(
+                                 (String) map.get("birthdate")
+                         ),
                         // se alguem souber um jeito mais simples de fazer isso, vá em frente
                         (String) map.get("job"),
                         i,

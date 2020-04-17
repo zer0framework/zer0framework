@@ -3,6 +3,7 @@ package br.com.zer0framework.servlet;
 import br.com.zer0framework.dao.UserDAO;
 import br.com.zer0framework.jdbc.ConnectionFactory;
 import br.com.zer0framework.model.User;
+import br.com.zer0framework.utils.security.AuthenticationUtil;
 import br.com.zer0framework.utils.security.SecurityUtil;
 import br.com.zer0framework.utils.HttpHeaders;
 
@@ -49,7 +50,7 @@ public class AuthServlet extends HttpServlet {
 				final User user = userDao.findByUsername(username);
 
 				if (user != null) {
-					if (user.getPassword().equals(password)) {
+					if (AuthenticationUtil.validatePassword(password, user.getPassword())) { //AuthenticationUtil.validatePassword(user.getPassword(), password)                  user.getPassword().equals(password)
 						final Date data = new Date(System.currentTimeMillis());
 						final String encrypted = SecurityUtil.encryptor(username + ":" +  data);
 						response.setStatus(HttpServletResponse.SC_OK);

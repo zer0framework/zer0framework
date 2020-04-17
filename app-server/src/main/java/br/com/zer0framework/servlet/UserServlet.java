@@ -114,7 +114,6 @@ public class UserServlet extends HttpServlet{
 			out.flush();
 		}
 	}
-
 	/**
 	 * Alterar um usuario
 	 */
@@ -126,6 +125,7 @@ public class UserServlet extends HttpServlet{
 		response.setContentType("application/json");
 
 		try(Connection conn = ConnectionFactory.getConnection(true)){
+			// TODO impedir que o mesmo ID seja adicionado
 			try{
 				final UserDAO userDAO = new UserDAO(conn);
 				final String json = HttpRequestUtil.getBody(request);
