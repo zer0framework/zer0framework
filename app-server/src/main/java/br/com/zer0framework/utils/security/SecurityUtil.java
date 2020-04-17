@@ -1,6 +1,7 @@
 package br.com.zer0framework.utils.security;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -27,9 +28,9 @@ public class SecurityUtil {
 
 			secretKey = new SecretKeySpec(key, "AES");
 		} catch (NoSuchAlgorithmException e) {
-			System.out.println("Cryptographic algorithm not available: " + e.toString());
+			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
-			System.out.println("Character encoding not supported: " + e.toString());
+			e.printStackTrace();
 		}
 	}
 
@@ -37,35 +38,44 @@ public class SecurityUtil {
 		try {
 			setSecretKey();
 
-			String currentToken = new Date(System.currentTimeMillis()).toString();
-			currentToken = Base64.getEncoder().encodeToString(currentToken.getBytes("utf-8"));
+			long expiration = new Date(System.currentTimeMillis() + 7200000).getTime();
 
-			String str = strToEncrypt + currentToken;
+			String str = strToEncrypt + ":"+ expiration;
 
-			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 			return Base64.getEncoder().encodeToString(cipher.doFinal(str.getBytes("UTF-8")));
 		} catch (Exception e) {
-			System.out.println("Error while encrypting: " + e.toString());
+			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public static String decryptor(String strToDecrypt) {
+	private static String decryptor(String strToDecrypt) {
 		try {
 			setSecretKey();
 			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
 			cipher.init(Cipher.DECRYPT_MODE, secretKey);
-			String str = new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
-			return str.substring(0, str.length() - 40);
+			String str = new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)), StandardCharsets.UTF_8);
+			return str;
 		} catch (Exception e) {
-			System.out.println("Error while decrypting: " + e.toString());
+			e.printStackTrace();
 		}
 		return null;
 	}
-	
-	//TODO Concrete validation of the token
-	public static boolean validateToken() {
+
+	public static boolean validateToken(String token) {
+
+		String x = decryptor(token);
+		String[] y = x.split(":");
+
+		//Integer userId = Integer.parseInt(y[0]);
+		Date expirationDate =  new Date(Long.parseLong(y[1]));
+		Date now = new Date();
+
+		if(now.before(expirationDate)){ //now.before(expirationDate)
+			return true;
+		}
 		return false;
 	}
 }

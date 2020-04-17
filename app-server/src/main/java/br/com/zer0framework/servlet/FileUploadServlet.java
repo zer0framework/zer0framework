@@ -19,10 +19,12 @@ public class FileUploadServlet extends HttpServlet {
 
         final String csv = HttpRequestUtil.getFile(request);
 
+        //TODO verificar se arquivo com esse nome ja existe, caso existir, perguntar se deseja sobrescrever
+
         try (PrintWriter writer = new PrintWriter(new File("C:\\zeroRepository\\test.csv"))) {
 
             writer.write(csv);
-            response.setStatus(200);
+            response.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception e) {
             response.setStatus(500);
         }

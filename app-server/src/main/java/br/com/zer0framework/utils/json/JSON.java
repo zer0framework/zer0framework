@@ -291,7 +291,14 @@ public class JSON {
     public static Map<String, Object> parseToMap(String json){
 
         String parsedJson = parse(json).toString();
-        String x = parsedJson.substring(2, parsedJson.length() - 2);
+        String x = null;
+
+        if (parsedJson.startsWith("{[")){
+            x = parsedJson.substring(2, parsedJson.length() - 2);
+        }else {
+            x = parsedJson.substring(1, parsedJson.length() - 1);
+        }
+
         String[] y = x.split(", ");
 
         Map<String, Object> map = new HashMap<>();

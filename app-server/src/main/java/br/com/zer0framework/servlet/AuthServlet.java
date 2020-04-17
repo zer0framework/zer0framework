@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Date;
 
 @WebServlet(urlPatterns = "/auth")
 public class AuthServlet extends HttpServlet {
@@ -50,9 +49,9 @@ public class AuthServlet extends HttpServlet {
 				final User user = userDao.findByUsername(username);
 
 				if (user != null) {
-					if (AuthenticationUtil.validatePassword(password, user.getPassword())) { //AuthenticationUtil.validatePassword(user.getPassword(), password)                  user.getPassword().equals(password)
-						final Date data = new Date(System.currentTimeMillis());
-						final String encrypted = SecurityUtil.encryptor(username + ":" +  data);
+					if (AuthenticationUtil.validatePassword(password, user.getPassword())) {
+
+						final String encrypted = SecurityUtil.encryptor(String.valueOf(user.getId()));
 						response.setStatus(HttpServletResponse.SC_OK);
 						response.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 						out.print("{ \"token\":\"" + encrypted + "\" }");

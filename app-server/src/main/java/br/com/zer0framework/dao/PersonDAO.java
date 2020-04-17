@@ -63,7 +63,12 @@ public class PersonDAO {
             ps.setString(1, person.getName());
             ps.setDate(2,  new java.sql.Date(person.getBirthdate().getTime()));
             ps.setString(3, person.getJob());
-            ps.setInt(4, (person.getManagerPersonId()));
+            try {
+                ps.setInt(4, (person.getManagerPersonId()));
+            }catch (Exception e){
+                ps.setNull(4, Types.INTEGER);
+            }
+
 
             ps.executeUpdate();
 

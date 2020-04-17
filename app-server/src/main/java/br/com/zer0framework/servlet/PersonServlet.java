@@ -115,7 +115,7 @@ public class PersonServlet extends HttpServlet {
                 Integer i;
                 try {
                      i = Integer.valueOf((String) map.get("managerPersonId"));
-                }catch (Exception e){
+                }catch (NullPointerException | NumberFormatException ex){
                     i=null;
                 }
                 personDAO.insert(new Person(
