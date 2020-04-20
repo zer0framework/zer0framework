@@ -1,14 +1,12 @@
 package br.com.zer0framework.utils;
 
 import sun.misc.IOUtils;
-import sun.nio.ch.IOUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 public class HttpRequestUtil {
 
@@ -44,9 +42,8 @@ public class HttpRequestUtil {
         return body;
     }
 
-    public static String getFile(HttpServletRequest request) throws IOException, ServletException {
+    public static String[] getFile(HttpServletRequest request) throws IOException, ServletException {
 
-        // TODO pegar nome do arquivo
         Part part = request.getPart("file");
 
         InputStream imp = part.getInputStream();
@@ -58,6 +55,20 @@ public class HttpRequestUtil {
         }catch (IOException e){
             e.printStackTrace();
         }
-        return new String(x, StandardCharsets.UTF_8);
+
+        String[] vet = new String[2];
+        vet[0] = new String(x, StandardCharsets.UTF_8);
+        vet[1] = getFileName(part);
+
+        return vet;
+    }
+
+    private static String getFileName(final Part part) {
+        for (String content : part.getHeader("content-disposition").split(";")) {
+            if (content.trim().startsWith("file")) {
+                return content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
+            }
+        }
+        return null;
     }
 }

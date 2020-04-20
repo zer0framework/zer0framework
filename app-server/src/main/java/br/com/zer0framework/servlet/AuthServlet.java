@@ -51,7 +51,7 @@ public class AuthServlet extends HttpServlet {
 				if (user != null) {
 					if (AuthenticationUtil.validatePassword(password, user.getPassword())) {
 
-						final String encrypted = SecurityUtil.encryptor(String.valueOf(user.getId()));
+						final String encrypted = SecurityUtil.encryptor(user.getId());
 						response.setStatus(HttpServletResponse.SC_OK);
 						response.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 						out.print("{ \"token\":\"" + encrypted + "\" }");

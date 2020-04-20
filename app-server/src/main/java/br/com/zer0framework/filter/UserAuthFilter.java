@@ -1,11 +1,6 @@
 package br.com.zer0framework.filter;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -43,12 +38,17 @@ public class UserAuthFilter implements Filter {
 			return;
 		}
 
-		if (SecurityUtil.validateToken(token)) {
-			res.setStatus(200);
-			filterChain.doFilter(request, response);
-		} else {
-			res.setStatus(401);
-		}
+		try {
+            if (SecurityUtil.validateToken(token)) {
+                res.setStatus(200);
+                filterChain.doFilter(request, response);
+            } else {
+                res.setStatus(401);
+            }
+        }catch (NumberFormatException e){
+		    res.setStatus(401);
+        }
+
 
 	}
 	@Override

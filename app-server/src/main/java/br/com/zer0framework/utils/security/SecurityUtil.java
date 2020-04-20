@@ -34,13 +34,13 @@ public class SecurityUtil {
 		}
 	}
 
-	public static String encryptor(String strToEncrypt) {
+	public static String encryptor(Integer toEncrypt) {
 		try {
 			setSecretKey();
 
 			long expiration = new Date(System.currentTimeMillis() + 7200000).getTime();
 
-			String str = strToEncrypt + ":"+ expiration;
+			String str = toEncrypt +":"+ expiration;
 
 			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -56,8 +56,7 @@ public class SecurityUtil {
 			setSecretKey();
 			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
 			cipher.init(Cipher.DECRYPT_MODE, secretKey);
-			String str = new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)), StandardCharsets.UTF_8);
-			return str;
+			return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)), StandardCharsets.UTF_8);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -66,16 +65,25 @@ public class SecurityUtil {
 
 	public static boolean validateToken(String token) {
 
-		String x = decryptor(token);
-		String[] y = x.split(":");
+		String decrypted = null;
+		try {
+			decrypted = decryptor(token);
+		}catch (Exception e){
+			return false;
+		}
 
-		//Integer userId = Integer.parseInt(y[0]);
+		String[] y = decrypted.split(":");
+
 		Date expirationDate =  new Date(Long.parseLong(y[1]));
 		Date now = new Date();
 
-		if(now.before(expirationDate)){ //now.before(expirationDate)
-			return true;
-		}
-		return false;
+        return now.before(expirationDate);
+    }
+
+    public static Integer getUserIdFromToken(String token){
+		String decrypted = decryptor(token);
+
+		String[] y = decrypted.split(":");
+		return Integer.parseInt(y[0]);
 	}
 }

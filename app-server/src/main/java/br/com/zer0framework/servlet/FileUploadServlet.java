@@ -1,5 +1,6 @@
 package br.com.zer0framework.servlet;
 
+import br.com.zer0framework.utils.FileUtil;
 import br.com.zer0framework.utils.HttpRequestUtil;
 
 import javax.servlet.ServletException;
@@ -11,22 +12,32 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 @WebServlet("/api/fileUpload")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 30, maxRequestSize = 1024 * 1024 * 50)
 public class FileUploadServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        final String csv = HttpRequestUtil.getFile(request);
+        /*
+        String[] vect = HttpRequestUtil.getFile(request);
+        final String csv = vect[0];
+        final String csvName = vect[1];
 
-        //TODO verificar se arquivo com esse nome ja existe, caso existir, perguntar se deseja sobrescrever
+        List<String> list = FileUtil.getAllFileNamesInDirectory("C:\\zeroRepository");
 
-        try (PrintWriter writer = new PrintWriter(new File("C:\\zeroRepository\\test.csv"))) {
+        if(list.contains(csvName)){
+            response.setStatus(HttpServletResponse.SC_CONTINUE);
+        }
+
+        try (PrintWriter writer = new PrintWriter(new File("C:\\zeroRepository\\"+csvName))) {
 
             writer.write(csv);
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception e) {
-            response.setStatus(500);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+
+         */
     }
 }
