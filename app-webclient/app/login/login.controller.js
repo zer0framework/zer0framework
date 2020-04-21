@@ -1,0 +1,10 @@
+class LoginController{
+
+    constructor(){
+
+    }
+
+    login(){
+        
+    }
+}

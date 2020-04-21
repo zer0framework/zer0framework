@@ -166,6 +166,7 @@ public class UserServlet extends HttpServlet{
 		response.setContentType("application/json");
 		final PrintWriter out = response.getWriter();
 		Integer id = null;
+
 		try {
 			String[] x = request.getRequestURI().split("/");
 			try{
