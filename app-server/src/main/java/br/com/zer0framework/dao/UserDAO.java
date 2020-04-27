@@ -1,6 +1,7 @@
 package br.com.zer0framework.dao;
 
 import br.com.zer0framework.model.User;
+import br.com.zer0framework.utils.security.AuthenticationUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -75,6 +76,7 @@ public class UserDAO {
 				obj.setUsername(rs.getString("ds_username"));
 				obj.setPassword(rs.getString("ds_password"));
 				obj.setPersonId(rs.getInt("cd_person"));
+				obj.setEmail(rs.getString("ds_email"));
 				obj.setCreated(rs.getDate("dh_created"));
 			}
 		}
@@ -86,17 +88,15 @@ public class UserDAO {
 		if (user.getPersonId() == null) {
 			throw new IllegalArgumentException("Person is null, not possible to insert!");
 		}
-		/*if (user.getId() == null) {
-			throw new IllegalArgumentException("User id is NOT null, try update!");
-		}*/
 
-		String sql = "insert into user (ds_username, ds_password, cd_person, dh_created) values (?, ?, ?, current_timestamp());";
+		String sql = "insert into user (ds_username, ds_password, cd_person, ds_email, dh_created) values (?, ?, ?, ?, current_timestamp());";
 		
 		try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 			
 			ps.setString(1, user.getUsername());
 			ps.setString(2, user.getPassword());
 			ps.setInt(3, user.getPersonId());
+			ps.setString(4,user.getEmail());
 
 			ps.executeUpdate();
 		}
@@ -109,14 +109,15 @@ public class UserDAO {
 		if (user.getId() == null) {
 			throw new IllegalArgumentException("User id is null, not possible to update!");
 		}
-		String sql = "update user set ds_username = ?, ds_password = ?, cd_person = ? where cd_user = ?;";
+		String sql = "update user set ds_username = ?, ds_password = ?, cd_person = ?, ds_email where cd_user = ?;";
 
 		try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
 			ps.setString(1, user.getUsername());
 			ps.setString(2, user.getPassword());
 			ps.setInt(3, user.getPersonId());
-			ps.setInt(4, user.getId());
+			ps.setString(4, user.getEmail());
+			ps.setInt(5, user.getId());
 
 			ps.executeUpdate();
 		}
@@ -133,6 +134,18 @@ public class UserDAO {
 			ps.setInt(1, userId);
 
 			return ps.executeUpdate() > 0;
+		}
+	}
+
+	public void updatePassword(String newPassword, String email) throws SQLException {
+
+		final String sql = "UPDATE user SET ds_password = ? WHERE ds_email = ? ";
+
+		try (PreparedStatement ps = connection.prepareStatement(sql)){
+			ps.setString(1, newPassword);
+			ps.setString(2,email);
+
+			ps.executeUpdate();
 		}
 	}
 

@@ -38,6 +38,7 @@ public class AuthServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("application/json");
 		final PrintWriter out = new PrintWriter(response.getOutputStream());
 
 		final String username = request.getParameter("username");
@@ -71,8 +72,8 @@ public class AuthServlet extends HttpServlet {
 	}
 
 	protected void writeUsernamePasswordInvalid(HttpServletResponse response, PrintWriter out) throws SQLException {
-		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		out.print("Username and/or Password Invalid!");
+		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		out.print("{\"messege\":\"Username and/or Password Invalid!\"}");
 		out.flush();
 	}
 }

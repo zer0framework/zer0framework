@@ -288,12 +288,12 @@ public class JSON {
         return this.obj;
     }
 
-    public static Map<String, Object> parseToMap(String json){
+    public static Map<String, ?> parseToMap(String json){
 
         String parsedJson = parse(json).toString();
         String x = null;
 
-        if (parsedJson.startsWith("{[")){
+        if (parsedJson.startsWith("[{")){
             x = parsedJson.substring(2, parsedJson.length() - 2);
         }else {
             x = parsedJson.substring(1, parsedJson.length() - 1);

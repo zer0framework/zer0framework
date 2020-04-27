@@ -9,13 +9,15 @@ public class User {
     private String password;
     private Integer personId;
     private Date created;
+    private String email;
 
-    public User(Integer id, String username, String password, Integer personId, Date created) {
+    public User(Integer id, String username, String password, Integer personId, Date created, String email) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.personId = personId;
         this.created = created;
+        this.email = email;
     }
 
     public User() {
@@ -60,5 +62,11 @@ public class User {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public String getEmail() { return email;}
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

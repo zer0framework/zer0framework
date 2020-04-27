@@ -12,7 +12,6 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import br.com.zer0framework.utils.security.SecurityUtil;
 import br.com.zer0framework.utils.HttpHeaders;
 
@@ -48,7 +47,6 @@ public class UserAuthFilter implements Filter {
         }catch (NumberFormatException e){
 		    res.setStatus(401);
         }
-
 
 	}
 	@Override

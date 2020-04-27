@@ -51,7 +51,6 @@ public class HttpRequestUtil {
 
         try {
             x = IOUtils.readFully(imp, imp.available(), true);
-
         }catch (IOException e){
             e.printStackTrace();
         }

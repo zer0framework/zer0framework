@@ -110,7 +110,7 @@ public class PersonServlet extends HttpServlet {
                 final PersonDAO personDAO = new PersonDAO(conn);
                 final String json = HttpRequestUtil.getBody(req);
 
-                Map<String, Object> map = JSON.parseToMap(json);
+                Map<String, Object> map = (Map<String, Object>) JSON.parseToMap(json);
 
                 Integer i;
                 try {
@@ -124,7 +124,6 @@ public class PersonServlet extends HttpServlet {
                          new SimpleDateFormat("yyyy/MM/dd").parse(
                                  (String) map.get("birthdate")
                          ),
-                        // se alguem souber um jeito mais simples de fazer isso, vá em frente
                         (String) map.get("job"),
                         i,
                         null)

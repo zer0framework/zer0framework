@@ -16,14 +16,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.regex.Pattern;
 
 @WebServlet("/api/fileUpload")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 30, maxRequestSize = 1024 * 1024 * 50)
 public class FileUploadServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 
         String[] vect = HttpRequestUtil.getFile(request);
         final String csv = vect[0];

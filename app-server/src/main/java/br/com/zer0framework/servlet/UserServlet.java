@@ -130,7 +130,7 @@ public class UserServlet extends HttpServlet{
 				final UserDAO userDAO = new UserDAO(conn);
 				final String json = HttpRequestUtil.getBody(request);
 
-				Map<String, Object> parsedMap = JSON.parseToMap(json);
+				Map<String, Object> parsedMap = (Map<String, Object>) JSON.parseToMap(json);
 
 				User user = new User();
 

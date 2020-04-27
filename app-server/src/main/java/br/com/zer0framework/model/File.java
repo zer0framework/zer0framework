@@ -80,15 +80,4 @@ public class File {
         this.lastModified = lastModified;
     }
 
-    @Override
-    public String toString() {
-        return "File{" +
-                "id=" + id +
-                ", fileName='" + fileName + '\'' +
-                ", originalFileName='" + originalFileName + '\'' +
-                ", created=" + created +
-                ", fileType='" + fileType + '\'' +
-                ", lastModified=" + lastModified +
-                '}';
-    }
 }

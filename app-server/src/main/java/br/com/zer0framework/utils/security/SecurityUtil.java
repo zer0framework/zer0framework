@@ -1,5 +1,8 @@
 package br.com.zer0framework.utils.security;
 
+import br.com.zer0framework.dao.UserDAO;
+import br.com.zer0framework.jdbc.ConnectionFactory;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -13,23 +16,37 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class SecurityUtil {
 
-	private static String secret = "iasdgfladsflakjsdfhalk";
+	private static String resetPasswordSecret = "dfsiopfjoidD$$sdSdasfdadfjdapiojgpdioj";
+	private static String secret = "iFSgsdgfsgfsfdasfsfASAsda@SdS";
 	private static byte[] key;
 	private static SecretKeySpec secretKey;
 
-	public static void setSecretKey() {
+	private static void setSecretKey() {
 		String myKey = secret;
 		try {
 			MessageDigest sha = MessageDigest.getInstance("SHA-1");
 
-			key = myKey.getBytes("UTF-8");
+			key = myKey.getBytes(StandardCharsets.UTF_8);
 			key = sha.digest(key);
 			key = Arrays.copyOf(key, 16);
 
 			secretKey = new SecretKeySpec(key, "AES");
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
+		}
+	}
+
+	private static void setResetPasswordSecretKey() {
+		String myKey = resetPasswordSecret;
+		try {
+			MessageDigest sha = MessageDigest.getInstance("SHA-1");
+
+			key = myKey.getBytes(StandardCharsets.UTF_8);
+			key = sha.digest(key);
+			key = Arrays.copyOf(key, 16);
+
+			secretKey = new SecretKeySpec(key, "AES");
+		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
 	}
@@ -44,7 +61,7 @@ public class SecurityUtil {
 
 			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-			return Base64.getEncoder().encodeToString(cipher.doFinal(str.getBytes("UTF-8")));
+			return Base64.getEncoder().encodeToString(cipher.doFinal(str.getBytes(StandardCharsets.UTF_8)));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -65,13 +82,12 @@ public class SecurityUtil {
 
 	public static boolean validateToken(String token) {
 
-		String decrypted = null;
+		String decrypted;
 		try {
 			decrypted = decryptor(token);
 		}catch (Exception e){
 			return false;
 		}
-
 		String[] y = decrypted.split(":");
 
 		Date expirationDate =  new Date(Long.parseLong(y[1]));
@@ -82,8 +98,52 @@ public class SecurityUtil {
 
     public static Integer getUserIdFromToken(String token){
 		String decrypted = decryptor(token);
-
 		String[] y = decrypted.split(":");
 		return Integer.parseInt(y[0]);
+	}
+
+	public static String generateResetPasswordKey(String email){
+		try {
+			setResetPasswordSecretKey();
+			long expiration = new Date(System.currentTimeMillis() + 900000).getTime();
+			String str = email +":"+ expiration;
+			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+			return Base64.getEncoder().encodeToString(cipher.doFinal(str.getBytes(StandardCharsets.UTF_8)));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private static String decryptRestPasswordKey(String key) {
+		try {
+			setResetPasswordSecretKey();
+			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+			cipher.init(Cipher.DECRYPT_MODE, secretKey);
+			return new String(cipher.doFinal(Base64.getDecoder().decode(key)), StandardCharsets.UTF_8);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static boolean validateResetPasswordKey(String key){
+		String decrypted;
+		try {
+			decrypted = decryptRestPasswordKey(key);
+		}catch (Exception e){
+			return false;
+		}
+		String[] x = decrypted.split(":");
+
+		Date expirationDate =  new Date(Long.parseLong(x[1]));
+		Date now = new Date();
+
+		return now.before(expirationDate);
+	}
+
+	public static String getEmailFromResetPasswordKey(String key){
+		return decryptRestPasswordKey(key);
 	}
 }
