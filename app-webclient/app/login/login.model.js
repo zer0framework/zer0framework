@@ -1,6 +1,5 @@
-class LoginController{
+class LoginModel{
 
     constructor(){
-
     }
 }

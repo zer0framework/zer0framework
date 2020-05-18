@@ -26,10 +26,14 @@ let onNavItemClick = (pathName) => {
     let todo = document.getElementById('todo');
     let post = document.getElementById('post');
     let contact = document.getElementById('contact');
+    let files = document.getElementById('files');
+
     dashboard.classList.remove("active");
     todo.classList.remove("active");
     post.classList.remove("active");
     contact.classList.remove("active");
+    files.classList.remove("active");
+
     let element = document.getElementById(currentRoute);
     element.classList.add("active");
     contentDiv.innerHTML = routes[pathRoute].getView().getTemplate();

@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import br.com.zer0framework.utils.security.SecurityUtil;
 import br.com.zer0framework.utils.HttpHeaders;
 
+// TODO RegisterUserSevlet
+
 @WebFilter(filterName = "userAuthFilter", urlPatterns = "/api/*")
 public class UserAuthFilter implements Filter {
 	protected FilterConfig filterConfig;

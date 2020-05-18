@@ -51,5 +51,4 @@ class TodoModel {
 
     this._commit(this.todos)
   }
-
 }

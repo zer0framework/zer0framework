@@ -3,6 +3,8 @@ package br.com.zer0framework.servlet;
 import br.com.zer0framework.dao.UserDAO;
 import br.com.zer0framework.jdbc.ConnectionFactory;
 import br.com.zer0framework.model.User;
+import br.com.zer0framework.utils.HttpRequestUtil;
+import br.com.zer0framework.utils.json.JSON;
 import br.com.zer0framework.utils.security.AuthenticationUtil;
 import br.com.zer0framework.utils.security.SecurityUtil;
 import br.com.zer0framework.utils.HttpHeaders;
@@ -17,6 +19,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 
 @WebServlet(urlPatterns = "/auth")
 public class AuthServlet extends HttpServlet {
@@ -41,16 +44,15 @@ public class AuthServlet extends HttpServlet {
 		response.setContentType("application/json");
 		final PrintWriter out = new PrintWriter(response.getOutputStream());
 
-		final String username = request.getParameter("username");
-		final String password = request.getParameter("password");
+		 Map<String, String> map = (Map<String, String>) JSON.parseToMap(HttpRequestUtil.getBody(request));
 
 		try (Connection conn = ConnectionFactory.getConnection()) {
 			try {
 				final UserDAO userDao = new UserDAO(conn);
-				final User user = userDao.findByUsername(username);
+				final User user = userDao.findByUsername(map.get("username"));
 
 				if (user != null) {
-					if (AuthenticationUtil.validatePassword(password, user.getPassword())) {
+					if (AuthenticationUtil.validatePassword(map.get("password"), user.getPassword())) {
 
 						final String encrypted = SecurityUtil.encryptor(user.getId());
 						response.setStatus(HttpServletResponse.SC_OK);
