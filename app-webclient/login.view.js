@@ -17,10 +17,18 @@ let authenticate = () =>{
       })
     })
     .then( res =>{
-        return res.json();              
+        if(res.ok){
+            window.location = 'http://127.0.0.1:5500/';
+            return res.json();   
+        }else{
+            alert('username or password is incorrect');
+            return null;
+        }
+                   
     })
-    .then(data => 
-        document.cookie = "token="+data.token
-        )
-        
+    .then(data => {
+         if(data != null){
+            document.cookie = "token="+data.token
+         }        
+})
 }
