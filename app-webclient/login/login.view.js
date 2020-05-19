@@ -5,8 +5,6 @@ class LoginView {
 
     getTemplate() {
         return `
-    <link rel="stylesheet" href="app/login/login.style.css">
-
     <div class="login-page">
         <div class="form">
             <form class="login-form">
