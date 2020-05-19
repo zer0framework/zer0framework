@@ -1,6 +1,0 @@
-class LoginController{
-
-    constructor(){
-
-    }
-}
