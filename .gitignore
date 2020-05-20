@@ -9,3 +9,6 @@ app-server/.settings/org.eclipse.wst.jsdt.ui.superType.container
 app-server/.settings/org.eclipse.wst.jsdt.ui.superType.name
 app-server/.settings/org.eclipse.wst.validation.prefs
 app-webclient/.vscode/settings.json
+app-server/src/main/java/br/com/zer0framework/utils/HttpRequestUtil.java
+app-server/src/main/java/br/com/zer0framework/utils/IOUtils.java
+app-webclient/.vscode/launch.json

@@ -1,9 +1,15 @@
+/**
+ * @class View
+ *
+ * Visual representation of the model.
+ */
 class LoginView {
 
     constructor() {
     }
 
     getTemplate() {
+        loadCSS('login/login.styles.css');
         return `
     <div class="login-page">
         <div class="form">
@@ -24,6 +30,7 @@ class LoginView {
 
 }
 
+
 let authenticate = () => {
     fetch('http://localhost:8080/auth', {
         method: 'POST',
@@ -37,7 +44,6 @@ let authenticate = () => {
     })
         .then(res => {
             if (res.ok) {
-                window.location = 'http://127.0.0.1:5500/';
                 return res.json();
             } else {
                 alert('username or password is incorrect');
@@ -48,6 +54,18 @@ let authenticate = () => {
         .then(data => {
             if (data != null) {
                 localStorage.setItem('token', data.token)
+                loginController.onInit();
+
+                loadCSS('styles.css');
+                document.body.innerHTML = index;
             }
         })
+}
+
+function loadCSS(url) {
+    var index = document.createElement('link');
+    lnk.setAttribute('type', "text/css");
+    lnk.setAttribute('rel', "stylesheet");
+    lnk.setAttribute('href', url);
+    document.getElementsByTagName("head").item(0).appendChild(lnk);
 }
