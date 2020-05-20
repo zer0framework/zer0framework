@@ -96,15 +96,15 @@ public class PersonDAO {
         }
     }
 
-    public void delete(Person person) throws SQLException{
-        if (person.getId() == null){
+    public void delete(Integer id) throws SQLException{
+        if (id == null){
             throw new IllegalArgumentException("Cannot delete unexistent person");
         }
 
         String sql = "DELETE FROM person WHERE cd_person = ?";
 
         try(PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setInt(1, person.getId());
+            ps.setInt(1, id);
             ps.executeUpdate();
         }
     }

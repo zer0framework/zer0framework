@@ -3,6 +3,7 @@ package br.com.zer0framework.servlet;
 import br.com.zer0framework.dao.PostDAO;
 import br.com.zer0framework.jdbc.ConnectionFactory;
 import br.com.zer0framework.model.Post;
+import br.com.zer0framework.utils.HttpRequestUtil;
 import br.com.zer0framework.utils.json.JSON;
 
 import javax.servlet.ServletConfig;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet(urlPatterns = {
 		"/api/posts",
@@ -56,7 +58,7 @@ public class PostServlet extends HttpServlet {
 	}
 
 	private void doGetAll(HttpServletResponse response, PrintWriter out) {
-		try(Connection conn = ConnectionFactory.getConnection(false)){
+		try(Connection conn = ConnectionFactory.getConnection(true)){
 			final PostDAO postDAO = new PostDAO(conn);
 
 			final List<Post> posts = postDAO.findAll();
@@ -72,7 +74,7 @@ public class PostServlet extends HttpServlet {
 	}
 
 	private void doGetById(HttpServletResponse response, PrintWriter out, Integer id) {
-		try (Connection conn = ConnectionFactory.getConnection(false)) {
+		try (Connection conn = ConnectionFactory.getConnection(true)) {
 			final PostDAO postDAO = new PostDAO(conn);
 
 			final Post post = postDAO.findById(id);
@@ -87,5 +89,53 @@ public class PostServlet extends HttpServlet {
 		}
 	}
 
-	//TODO doPost, doPut, doDelete
+	@Override
+	public void doPost(HttpServletRequest req, HttpServletResponse res){
+		try(Connection conn = ConnectionFactory.getConnection(true)){
+
+			final PostDAO postDAO = new PostDAO(conn);
+			final Map<String, String> map = (Map<String, String>) JSON.parseToMap(HttpRequestUtil.getBody(req));
+
+			postDAO.insert(new Post(
+					Integer.valueOf(map.get("userId")),
+					map.get("title"),
+					map.get("body"))
+			);
+
+			res.setStatus(HttpServletResponse.SC_CREATED);
+		}catch (Exception e){
+			res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Override
+	public void doPut(HttpServletRequest req, HttpServletResponse res){
+		try (Connection conn = ConnectionFactory.getConnection(true)){
+			final PostDAO postDAO = new PostDAO(conn);
+			final Map<String, String> map = (Map<String, String>) JSON.parseToMap(HttpRequestUtil.getBody(req));
+
+			postDAO.update(new Post(
+					Integer.valueOf(map.get("id")),
+					Integer.valueOf(map.get("userId")),
+					map.get("title"),
+					map.get("body")
+					));
+			res.setStatus(HttpServletResponse.SC_OK);
+		}catch (Exception e){
+			res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Override
+	public void doDelete(HttpServletRequest req, HttpServletResponse res){
+		try (Connection conn = ConnectionFactory.getConnection(true)){
+			final PostDAO postDAO = new PostDAO(conn);
+			final Integer id = Integer.valueOf(req.getParameter("id"));
+
+			postDAO.delete(id);
+			res.setStatus(HttpServletResponse.SC_OK);
+		}catch (Exception e){
+			res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+	}
 }

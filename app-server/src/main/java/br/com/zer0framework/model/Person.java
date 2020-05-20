@@ -7,8 +7,18 @@ public class Person {
 	private String name;
 	private Date birthdate;
 	private String job;
+	private Integer managerPersonId;
+	private Date created;
 
 	public Person() {
+	}
+
+	public Person(Integer id, String name, Date birthdate, String job, Integer managerPersonId) {
+		this.id = id;
+		this.name = name;
+		this.birthdate = birthdate;
+		this.job = job;
+		this.managerPersonId = managerPersonId;
 	}
 
 	public Person(Integer id, String name, Date birthdate, String job, Integer managerPersonId, Date created) {
@@ -27,9 +37,6 @@ public class Person {
 	public void setCreated(Date created) {
 		this.created = created;
 	}
-
-	private Integer managerPersonId;
-	private Date created;
 
 	public Integer getId() {
 		return id;

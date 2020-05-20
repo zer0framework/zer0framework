@@ -3,6 +3,7 @@ package br.com.zer0framework.servlet;
 import br.com.zer0framework.dao.PersonDAO;
 import br.com.zer0framework.jdbc.ConnectionFactory;
 import br.com.zer0framework.model.Person;
+import br.com.zer0framework.model.Post;
 import br.com.zer0framework.utils.HttpRequestUtil;
 import br.com.zer0framework.utils.json.JSON;
 
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.Struct;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -128,11 +130,43 @@ public class PersonServlet extends HttpServlet {
                         i,
                         null)
                 );
-                resp.setStatus(201);
+                resp.setStatus(HttpServletResponse.SC_CREATED);
             }catch (Exception e){
                 resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 e.printStackTrace();
             }
         }
-    // TODO doPost, doPut, doDelete
+        @Override
+        public void doPut(HttpServletRequest req, HttpServletResponse resp){
+           try (Connection connection = ConnectionFactory.getConnection(true)){
+               final PersonDAO personDAO = new PersonDAO(connection);
+               final Map<String, String> map = (Map<String, String>) JSON.parseToMap(HttpRequestUtil.getBody(req));
+
+               personDAO.update(new Person(
+                       Integer.valueOf(map.get("id")),
+                       map.get("name"),
+                       new SimpleDateFormat("yyyy/MM/dd").parse(
+                                map.get("birthdate")
+                       ),
+                       map.get("job"),
+                       Integer.valueOf(map.get("managerPersonId"))
+                       ));
+
+               resp.setStatus(HttpServletResponse.SC_OK);
+           }catch (Exception e){
+               resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+           }
+        }
+
+        @Override
+        public void doDelete(HttpServletRequest req, HttpServletResponse res){
+            try(Connection conn = ConnectionFactory.getConnection(true)){
+                final PersonDAO personDAO = new PersonDAO(conn);
+
+                final Integer id = Integer.valueOf(req.getParameter("id"));
+                personDAO.delete(id);
+            }catch (Exception e){
+                res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
 }

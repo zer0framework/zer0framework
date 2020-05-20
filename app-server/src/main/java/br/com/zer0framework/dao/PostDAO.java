@@ -98,18 +98,13 @@ public class PostDAO {
 		}
 	}
 
-	public boolean delete(Post post) throws SQLException {
-		return deleteById(post.getId());
-	}
-
-	public boolean deleteById(int postId) throws SQLException {
+	public boolean delete(Integer id) throws SQLException {
 		final String sql = "delete from post where cd_post = ?";
 
 		try (PreparedStatement ps = connection.prepareStatement(sql)) {
-			ps.setInt(1, postId);
+			ps.setInt(1, id);
 
 			return ps.executeUpdate() > 0;
-		}
+	    }
 	}
-
 }

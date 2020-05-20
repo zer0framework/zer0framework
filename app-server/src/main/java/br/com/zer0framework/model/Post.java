@@ -10,6 +10,23 @@ public class Post {
 	private String body;
 	private Date created;
 
+	public Post(Integer userId, String title, String body) {
+		this.userId = userId;
+		this.title = title;
+		this.body = body;
+	}
+
+	public Post(Integer id, Integer userId, String title, String body) {
+		this.id = id;
+		this.userId = userId;
+		this.title = title;
+		this.body = body;
+	}
+
+	public Post(){
+
+	}
+
 	public Date getCreated() {
 		return created;
 	}
