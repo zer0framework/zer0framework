@@ -55,11 +55,10 @@ let authenticate = () => {
             if (data != null) {
                 localStorage.setItem('token', data.token)
                 loginController.onInit();
-
                 loadCSS('styles.css');
                 document.body.innerHTML = index;
             }
-        })
+        }).catch(err => alert('could not connect with server'));
 }
 
 function loadCSS(url) {

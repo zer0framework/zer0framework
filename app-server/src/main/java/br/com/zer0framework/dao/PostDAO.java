@@ -61,12 +61,6 @@ public class PostDAO {
 	}
 
 	public void insert(Post post) throws SQLException {
-		if (post.getId() == null) {
-			throw new IllegalArgumentException("Post is null, not possible to insert!");
-		}
-		if (post.getId() == null) {
-			throw new IllegalArgumentException("Post id is NOT null, try update!");
-		}
 		String sql = "insert into post (cd_user, ds_title, ds_body, dh_created) values (?, ?, ?, current_timestamp());";
 
 		try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
