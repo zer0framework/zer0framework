@@ -66,6 +66,7 @@ onNavItemClick = (pathName) => {
 
 logout = () => {
   localStorage.removeItem('token');
+  localStorage.removeItem('userId');
   loadCSS('login/login.styles.css');
   loginController.onInit();
   document.body.innerHTML = loginController.getView().getTemplate();
@@ -106,6 +107,7 @@ function getTemplate() {
 
 window.onbeforeunload = function () {
   localStorage.removeItem('token');
+  localStorage.removeItem('userId');
   return null;
 };
 

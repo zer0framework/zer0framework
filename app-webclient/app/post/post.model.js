@@ -13,7 +13,7 @@ class PostModel {
     window.fetch(url,
       {
         method: 'GET',
-        headers: { 'Authorization': 'XXXXXXXXX' }
+        headers: { 'Authorization': localStorage.getItem('token') }
       })
       .then(response => response.json())
       .then(json => {
@@ -33,20 +33,21 @@ class PostModel {
     this.onPostListChanged(post);
     if (removal === true) {
       this.remove(post);
-    } else if (post.id === undefined || post.id === null) {
+    } else  /*(post.id == undefined || post.id == null)*/ {
       this.create(post);
-    } else {
-      this.update(post);
+      //} else {
+      //this.update(post);
     }
   }
 
   addPost(postId, postTitle, postBody) {
     const newPost = {
-      userId: 1,
-      id: postId == undefined ? null : postId,
+      userId: localStorage.getItem('userId'),
+      // id: postId == undefined ? null : postId,
       title: postTitle,
       body: postBody,
     };
+    console.log(JSON.stringify(newPost));
 
     if (this.posts === null) {
       this.posts = [];
@@ -88,23 +89,22 @@ class PostModel {
     this._commit(this.posts)
   }
 
-  /* Fetch-API */
-
   create(post) {
     window.fetch(apiUrl, {
       method: 'POST',
-      headers: { 'Authorization': 'XXXXXXXXX' },
+      headers: { 'Authorization': localStorage.getItem('token') },
       body: JSON.stringify(post)
-    }).then(function (response) {
-      response.json().then(li)
-    });
+    }).then(response => {
+      return response;
+    })
   }
 
+  /*
   update(post) {
     let _self = this;
     window.fetch(apiUrl + "/" + post.id, {
       method: 'PATCH',
-      headers: { 'Authorization': 'XXXXXXXXX' },
+      headers: { 'Authorization': localStorage.getItem('token') },
       body: JSON.stringify(post)
     }).then(function (response) {
       response.json().then(function (post) {
@@ -112,6 +112,7 @@ class PostModel {
       })
     });
   }
+  */
 
   remove(post) {
     window.fetch(apiUrl + "/" + post.id, {

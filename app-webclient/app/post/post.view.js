@@ -112,6 +112,7 @@ class PostView {
       }
     });
   }
+
   bindDeletePost(handler) {
     this.postList.addEventListener('click', event => {
       if (event.target.className === 'delete') {
@@ -120,4 +121,5 @@ class PostView {
       }
     });
   }
+
 }

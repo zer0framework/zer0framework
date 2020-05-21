@@ -30,7 +30,6 @@ class LoginView {
 
 }
 
-
 let authenticate = () => {
     fetch('http://localhost:8080/auth', {
         method: 'POST',
@@ -53,13 +52,27 @@ let authenticate = () => {
         })
         .then(data => {
             if (data != null) {
-                localStorage.setItem('token', data.token)
+                localStorage.setItem('token', data.token);
+                storeUserId();
+
                 loginController.onInit();
                 loadCSS('styles.css');
                 document.body.innerHTML = index;
             }
-        }).catch(err => alert('could not connect with server'));
+        })
 }
+
+function storeUserId() {
+    window.fetch('http://localhost:8080/api/users/' + document.getElementById('username').value, {
+        method: 'GET',
+        headers: { 'Authorization': localStorage.getItem('token') },
+    })
+        .then(response => response.json())
+        .then(json => {
+            localStorage.setItem('userId', json.id);
+        });
+}
+
 
 function loadCSS(url) {
     var index = document.createElement('link');
