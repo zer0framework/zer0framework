@@ -7,7 +7,7 @@
  * @param view
  */
 class PostController {
-  
+
   constructor(model, view) {
     this.model = model
     this.view = view
@@ -18,7 +18,7 @@ class PostController {
     this.view.onInit(param);
     // Explicit this binding
     this.model.bindPostListChanged(this.onPostListChanged)
-    this.view.bindAddPost(this.handleAddPost)
+    this.view.bindSubmitPost(this.handlePost)
     this.view.bindDeletePost(this.handleDeletePost)
 
     // Display initial posts
@@ -31,12 +31,20 @@ class PostController {
     }
   }
 
+  handlePost = (postId, postTitle, postBody) => {
+    if (postId != "") {
+      this.handleEditPost(postId, postTitle, postBody)
+    } else {
+      this.handleAddPost(postId, postTitle, postBody)
+    }
+  }
+
   handleAddPost = (postId, postTitle, postBody) => {
     this.model.addPost(postId, postTitle, postBody);
   }
 
-  handleEditPost = (id, postText) => {
-    this.model.editPost(id, postText)
+  handleEditPost = (postId, postTitle, postBody) => {
+    this.model.editPost(postId, postTitle, postBody)
   }
 
   handleDeletePost = id => {

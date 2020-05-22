@@ -33,27 +33,35 @@ class PostModel {
     this.onPostListChanged(post);
     if (removal === true) {
       this.remove(post);
-    } else  /*(post.id == undefined || post.id == null)*/ {
+    } else if (post.id === undefined) {
       this.create(post);
-      //} else {
-      //this.update(post);
+    } else {
+      this.update(post);
     }
   }
 
   addPost(postId, postTitle, postBody) {
     const newPost = {
       userId: localStorage.getItem('userId'),
-      // id: postId == undefined ? null : postId,
       title: postTitle,
       body: postBody,
     };
-    console.log(JSON.stringify(newPost));
 
     if (this.posts === null) {
       this.posts = [];
     }
 
     this._commit(newPost);
+  }
+
+  editPost(postId, postTitle, postBody) {
+    const editedPost = {
+      id: postId,
+      userId: localStorage.getItem('userId'),
+      title: postTitle,
+      body: postBody,
+    };
+    this._commit(editedPost);
   }
 
   refreshData(newPost) {
@@ -67,13 +75,6 @@ class PostModel {
     this.onPostListChanged(this.posts);
   }
 
-  editPost(id, updatedText) {
-    this.posts = this.posts.map(post =>
-      post.id === id ? { id: post.id, text: updatedText, complete: post.complete } : post
-    )
-
-    this._commit(this.posts, true);
-  }
 
   deletePost(id) {
     this.posts = this.posts.filter(post => post.id !== id)
@@ -99,20 +100,16 @@ class PostModel {
     })
   }
 
-  /*
   update(post) {
-    let _self = this;
-    window.fetch(apiUrl + "/" + post.id, {
-      method: 'PATCH',
+    window.fetch(apiUrl + "/", {
+      method: 'PUT',
       headers: { 'Authorization': localStorage.getItem('token') },
       body: JSON.stringify(post)
-    }).then(function (response) {
-      response.json().then(function (post) {
-        _self.refreshData(post);
-      })
+    }).then(response => {
+      return response;
     });
   }
-  */
+
 
   remove(post) {
     window.fetch(apiUrl + "/" + post.id, {

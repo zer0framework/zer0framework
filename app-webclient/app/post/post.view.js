@@ -103,13 +103,11 @@ class PostView {
     }
   }
 
-  bindAddPost(handler) {
+  bindSubmitPost(handler) {
     this.postForm.addEventListener('submit', event => {
       event.preventDefault();
-      if (this.postTitle.value && this.postBody.value) {
-        handler(this.postId.value, this.postTitle.value, this.postBody.value);
-        this._resetInput();
-      }
+      handler(this.postId.value, this.postTitle.value, this.postBody.value);
+      this._resetInput();
     });
   }
 
