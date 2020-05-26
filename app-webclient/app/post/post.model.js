@@ -77,9 +77,9 @@ class PostModel {
 
 
   deletePost(id) {
-    this.posts = this.posts.filter(post => post.id !== id)
+    const toDelete = { id: id }
 
-    this._commit(this.posts)
+    this._commit(toDelete, true)
   }
 
   togglePost(id) {
@@ -113,9 +113,10 @@ class PostModel {
 
   remove(post) {
     window.fetch(apiUrl + "/" + post.id, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: { 'Authorization': localStorage.getItem('token') }
     }).then(function () {
-      posts.removeChild(event.target.parentNode)
+      //document.getElementsByTagName('ul')[0].removeChild()
     });
   }
 

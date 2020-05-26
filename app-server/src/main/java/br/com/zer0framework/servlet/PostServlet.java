@@ -129,10 +129,11 @@ public class PostServlet extends HttpServlet {
 	@Override
 	public void doDelete(HttpServletRequest req, HttpServletResponse res){
 		try (Connection conn = ConnectionFactory.getConnection(true)){
+			
+			final String[] split = req.getPathInfo().split("/");
 			final PostDAO postDAO = new PostDAO(conn);
-			final Integer id = Integer.valueOf(req.getParameter("id"));
 
-			postDAO.delete(id);
+			postDAO.delete(Integer.valueOf(split[1]));
 			res.setStatus(HttpServletResponse.SC_OK);
 		}catch (Exception e){
 			res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

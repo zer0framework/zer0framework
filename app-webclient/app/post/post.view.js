@@ -18,8 +18,9 @@ class PostView {
       <label for="lname">Body:</label><br>
       <textarea id="postBody" name="postBody" rows="4" cols="50"></textarea>
       <br><br>
-      <input type="submit" value="Submit">
-    </form>
+      <button id="submit">Submit</button>
+      <button id="delete">Delete</button>
+      </form>
 
     <h2>Posts</h2><br>
     
@@ -104,7 +105,7 @@ class PostView {
   }
 
   bindSubmitPost(handler) {
-    this.postForm.addEventListener('submit', event => {
+    document.getElementById('submit').addEventListener('click', event => {
       event.preventDefault();
       handler(this.postId.value, this.postTitle.value, this.postBody.value);
       this._resetInput();
@@ -112,10 +113,13 @@ class PostView {
   }
 
   bindDeletePost(handler) {
-    this.postList.addEventListener('click', event => {
-      if (event.target.className === 'delete') {
-        const id = parseInt(event.target.parentElement.id);
-        handler(id);
+    document.getElementById('delete').addEventListener('click', event => {
+      event.preventDefault();
+      if (this.postId.value === "") {
+        alert('Please select a post.')
+      } else {
+        handler(this.postId.value);
+        this._resetInput();
       }
     });
   }
