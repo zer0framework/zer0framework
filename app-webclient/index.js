@@ -1,9 +1,10 @@
 let routes = {
   '/': homepage,
   '/index.html': homepage,
-  '/todo': todoController,
+  '/contact': contactController,
+  '/files': filesController,
   '/post': postController,
-  '/contact': contact,
+  '/todo': todoController,
 };
 
 let contentDiv = document.getElementById('content');
