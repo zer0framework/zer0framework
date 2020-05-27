@@ -1,27 +1,30 @@
-let routes = {
-  '/': homepage,
-  '/index.html': homepage,
+const routes = {
+  '/': homepageController,
+  '/index.html': homepageController,
   '/contact': contactController,
   '/files': filesController,
   '/post': postController,
   '/todo': todoController,
 };
 
-let contentDiv = document.getElementById('content');
 
 if (localStorage.getItem('token') != null) {
 
   document.body.innerHTML = getTemplate();
-
   loadCSS('styles.css');
+
+  let contentDiv = document.getElementById('content');
 
   window.onpopstate = () => {
     contentDiv.innerHTML = routes[window.location.pathname];
+    alert(window.location.pathname)
   }
 
   contentDiv.innerHTML = routes[window.location.pathname];
+  alert(window.location.pathname)
 
 } else {
+  window.history.pushState({}, 'Login', window.location.origin + '/login');
   loadCSS('login/login.styles.css');
   loginController.onInit();
   document.body.innerHTML = loginController.getView().getTemplate();
@@ -30,9 +33,9 @@ if (localStorage.getItem('token') != null) {
 onNavItemClick = (pathName) => {
   if (localStorage.getItem('token') != null) {
 
-    contentDiv = document.getElementById('content');
-
     window.history.pushState({}, pathName, window.location.origin + pathName);
+
+    contentDiv = document.getElementById('content');
 
     if (typeof routes[pathName] === 'string' || routes[pathName] instanceof String) {
       contentDiv.innerHTML = routes[pathName];
@@ -41,31 +44,37 @@ onNavItemClick = (pathName) => {
       const pathRoute = '/' + currentRoute;
       const pathParam = pathName.split('/')[2];
 
-      let dashboard = document.getElementById('dashboard');
       let todo = document.getElementById('todo');
       let post = document.getElementById('post');
       let contact = document.getElementById('contact');
       let files = document.getElementById('files');
 
-      dashboard.classList.remove("active");
       todo.classList.remove("active");
       post.classList.remove("active");
       contact.classList.remove("active");
       files.classList.remove("active");
 
-      loadCSS('app/' + currentRoute + pathRoute + '.styles.css');
-
-      let element = document.getElementById(currentRoute);
-      element.classList.add("active");
-      contentDiv.innerHTML = routes[pathRoute].getView().getTemplate();
-      routes[pathRoute].onInit(pathParam);
+      if (pathName === "/") {
+        loadCSS('app/homepage/homepage.styles.css');
+        contentDiv.innerHTML = routes[pathRoute].getView().getTemplate();
+        routes[pathRoute].onInit(pathParam);
+      } else {
+        loadCSS('app/' + currentRoute + pathRoute + '.styles.css');
+        let element = document.getElementById(currentRoute);
+        element.classList.add("active");
+        contentDiv.innerHTML = routes[pathRoute].getView().getTemplate();
+        routes[pathRoute].onInit(pathParam);
+      }
     }
   } else {
     alert('User unauthorized');
   }
 }
 
+
+
 logout = () => {
+  window.history.pushState({}, 'Login', window.location.origin + '/login');
   localStorage.removeItem('token');
   localStorage.removeItem('userId');
   loadCSS('login/login.styles.css');
@@ -87,7 +96,6 @@ function getTemplate() {
 
   <!-- MENU -->
   <ul class="menu">
-    <li><a id="dashboard" href="#" class="active">Dashboard</a></li>
     <li><a id="todo" href="#" onclick="onNavItemClick('/todo'); return false;">To do</a></li>
     <li><a id="post" href="#" onclick="onNavItemClick('/post'); return false;">Post</a></li>
     <li><a id="contact" href="#" onclick="onNavItemClick('/contact'); return false;">Contact</a></li>

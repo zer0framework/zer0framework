@@ -56,8 +56,11 @@ let authenticate = () => {
                 storeUserId();
 
                 loginController.onInit();
+
+                window.history.pushState({}, 'Homepage', window.location.origin + '/');
                 loadCSS('styles.css');
                 document.body.innerHTML = index;
+                document.getElementById('content').innerHTML = routes['/'].getView().getTemplate();
             }
         })
 }
