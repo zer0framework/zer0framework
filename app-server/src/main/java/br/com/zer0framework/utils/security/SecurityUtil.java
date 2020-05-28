@@ -1,9 +1,5 @@
 package br.com.zer0framework.utils.security;
 
-import br.com.zer0framework.dao.UserDAO;
-import br.com.zer0framework.jdbc.ConnectionFactory;
-
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -57,7 +53,7 @@ public class SecurityUtil {
 
 			long expiration = new Date(System.currentTimeMillis() + 7200000).getTime();
 
-			String str = toEncrypt +":"+ expiration;
+			String str = toEncrypt + ":" + expiration;
 
 			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -85,28 +81,28 @@ public class SecurityUtil {
 		String decrypted;
 		try {
 			decrypted = decryptor(token);
-		}catch (Exception e){
+		} catch (Exception e) {
 			return false;
 		}
 		String[] y = decrypted.split(":");
 
-		Date expirationDate =  new Date(Long.parseLong(y[1]));
+		Date expirationDate = new Date(Long.parseLong(y[1]));
 		Date now = new Date();
 
-        return now.before(expirationDate);
-    }
+		return now.before(expirationDate);
+	}
 
-    public static Integer getUserIdFromToken(String token){
+	public static Integer getUserIdFromToken(String token) {
 		String decrypted = decryptor(token);
 		String[] y = decrypted.split(":");
 		return Integer.parseInt(y[0]);
 	}
 
-	public static String generateResetPasswordKey(String email){
+	public static String generateResetPasswordKey(String email) {
 		try {
 			setResetPasswordSecretKey();
 			long expiration = new Date(System.currentTimeMillis() + 900000).getTime();
-			String str = email +":"+ expiration;
+			String str = email + ":" + expiration;
 			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 			return Base64.getEncoder().encodeToString(cipher.doFinal(str.getBytes(StandardCharsets.UTF_8)));
@@ -128,22 +124,22 @@ public class SecurityUtil {
 		return null;
 	}
 
-	public static boolean validateResetPasswordKey(String key){
+	public static boolean validateResetPasswordKey(String key) {
 		String decrypted;
 		try {
 			decrypted = decryptRestPasswordKey(key);
-		}catch (Exception e){
+		} catch (Exception e) {
 			return false;
 		}
 		String[] x = decrypted.split(":");
 
-		Date expirationDate =  new Date(Long.parseLong(x[1]));
+		Date expirationDate = new Date(Long.parseLong(x[1]));
 		Date now = new Date();
 
 		return now.before(expirationDate);
 	}
 
-	public static String getEmailFromResetPasswordKey(String key){
+	public static String getEmailFromResetPasswordKey(String key) {
 		return decryptRestPasswordKey(key);
 	}
 }

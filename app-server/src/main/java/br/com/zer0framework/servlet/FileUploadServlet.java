@@ -19,30 +19,30 @@ import java.sql.SQLException;
 import java.util.regex.Pattern;
 
 @WebServlet("/api/fileUpload")
-@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 30, maxRequestSize = 1024 * 1024 * 50)
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 30, maxRequestSize = 1024 * 1024
+		* 50)
 public class FileUploadServlet extends HttpServlet {
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String[] vect = HttpRequestUtil.getFile(request);
-        final String csv = vect[0];
-        final String csvName = vect[1];
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        final FileDAO fileDAO = new FileDAO(ConnectionFactory.getConnection());
+		String[] vect = HttpRequestUtil.getFile(request);
+		final String csv = vect[0];
+		final String csvName = vect[1];
 
-        try (PrintWriter writer = new PrintWriter(new File("C:\\zeroRepository\\"+csvName))) {
-            try {
-                fileDAO.insert(new br.com.zer0framework.model.File(
-                        csvName+":"+FileUtil.stringRandomizer(3),
-                        csvName,
-                        csvName.split(Pattern.quote("."))[1]
-                ));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            writer.write(csv);
-            response.setStatus(HttpServletResponse.SC_OK);
-        } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-    }
+		final FileDAO fileDAO = new FileDAO(ConnectionFactory.getConnection());
+
+		try (PrintWriter writer = new PrintWriter(new File("C:\\zeroRepository\\" + csvName))) {
+			try {
+				fileDAO.insert(new br.com.zer0framework.model.File(csvName + ":" + FileUtil.stringRandomizer(3),
+						csvName, csvName.split(Pattern.quote("."))[1]));
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			writer.write(csv);
+			response.setStatus(HttpServletResponse.SC_OK);
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+	}
 }

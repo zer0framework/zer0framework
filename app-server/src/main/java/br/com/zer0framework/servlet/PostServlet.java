@@ -18,10 +18,7 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(urlPatterns = {
-		"/api/posts",
-		"/api/posts/*"
-})
+@WebServlet(urlPatterns = { "/api/posts", "/api/posts/*" })
 public class PostServlet extends HttpServlet {
 
 	public void init(ServletConfig config) throws ServletException {
@@ -32,21 +29,18 @@ public class PostServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		final PrintWriter out = response.getWriter();
 		response.setContentType("application/json");
 
 		final String[] split = request.getPathInfo() == null ? null : request.getPathInfo().split("/");
 		Integer id = null;
-		String postname = null;
 		if (split != null && split.length == 2) {
 			try {
 				id = Integer.parseInt(split[1]);
 			} catch (Exception e) {
 				id = null;
-			}
-			if (id == null) {
-				postname = split[1];
 			}
 		}
 
@@ -58,7 +52,7 @@ public class PostServlet extends HttpServlet {
 	}
 
 	private void doGetAll(HttpServletResponse response, PrintWriter out) {
-		try(Connection conn = ConnectionFactory.getConnection(true)){
+		try (Connection conn = ConnectionFactory.getConnection(true)) {
 			final PostDAO postDAO = new PostDAO(conn);
 
 			final List<Post> posts = postDAO.findAll();
@@ -66,7 +60,7 @@ public class PostServlet extends HttpServlet {
 
 			out.print(json);
 			out.flush();
-		} catch (Exception e){
+		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			out.print(e.getMessage());
 			out.flush();
@@ -90,52 +84,44 @@ public class PostServlet extends HttpServlet {
 	}
 
 	@Override
-	public void doPost(HttpServletRequest req, HttpServletResponse res){
-		try(Connection conn = ConnectionFactory.getConnection(true)){
+	public void doPost(HttpServletRequest req, HttpServletResponse res) {
+		try (Connection conn = ConnectionFactory.getConnection(true)) {
 
 			final PostDAO postDAO = new PostDAO(conn);
 			final Map<String, String> map = (Map<String, String>) JSON.parseToMap(HttpRequestUtil.getBody(req));
 
-			postDAO.insert(new Post(
-					Integer.valueOf(map.get("userId")),
-					map.get("title"),
-					map.get("body"))
-			);
+			postDAO.insert(new Post(Integer.valueOf(map.get("userId")), map.get("title"), map.get("body")));
 
 			res.setStatus(HttpServletResponse.SC_CREATED);
-		}catch (Exception e){
+		} catch (Exception e) {
 			res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@Override
-	public void doPut(HttpServletRequest req, HttpServletResponse res){
-		try (Connection conn = ConnectionFactory.getConnection(true)){
+	public void doPut(HttpServletRequest req, HttpServletResponse res) {
+		try (Connection conn = ConnectionFactory.getConnection(true)) {
 			final PostDAO postDAO = new PostDAO(conn);
 			final Map<String, String> map = (Map<String, String>) JSON.parseToMap(HttpRequestUtil.getBody(req));
 
-			postDAO.update(new Post(
-					Integer.valueOf(map.get("id")),
-					Integer.valueOf(map.get("userId")),
-					map.get("title"),
-					map.get("body")
-					));
+			postDAO.update(new Post(Integer.valueOf(map.get("id")), Integer.valueOf(map.get("userId")),
+					map.get("title"), map.get("body")));
 			res.setStatus(HttpServletResponse.SC_OK);
-		}catch (Exception e){
+		} catch (Exception e) {
 			res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@Override
-	public void doDelete(HttpServletRequest req, HttpServletResponse res){
-		try (Connection conn = ConnectionFactory.getConnection(true)){
-			
+	public void doDelete(HttpServletRequest req, HttpServletResponse res) {
+		try (Connection conn = ConnectionFactory.getConnection(true)) {
+
 			final String[] split = req.getPathInfo().split("/");
 			final PostDAO postDAO = new PostDAO(conn);
 
 			postDAO.delete(Integer.valueOf(split[1]));
 			res.setStatus(HttpServletResponse.SC_OK);
-		}catch (Exception e){
+		} catch (Exception e) {
 			res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}

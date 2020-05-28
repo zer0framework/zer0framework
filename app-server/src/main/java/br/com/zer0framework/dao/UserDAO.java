@@ -1,11 +1,14 @@
 package br.com.zer0framework.dao;
 
-import br.com.zer0framework.model.User;
-import br.com.zer0framework.utils.security.AuthenticationUtil;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import br.com.zer0framework.model.User;
 
 public class UserDAO {
 
@@ -14,7 +17,7 @@ public class UserDAO {
 	public UserDAO(Connection conn) {
 		this.connection = conn;
 	}
-	
+
 	public User findByUsername(String username) throws SQLException {
 		User result = null;
 
@@ -90,13 +93,13 @@ public class UserDAO {
 		}
 
 		String sql = "insert into user (ds_username, ds_password, cd_person, ds_email, dh_created) values (?, ?, ?, ?, current_timestamp());";
-		
+
 		try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-			
+
 			ps.setString(1, user.getUsername());
 			ps.setString(2, user.getPassword());
 			ps.setInt(3, user.getPersonId());
-			ps.setString(4,user.getEmail());
+			ps.setString(4, user.getEmail());
 
 			ps.executeUpdate();
 		}
@@ -129,7 +132,7 @@ public class UserDAO {
 
 	public boolean deleteById(int userId) throws SQLException {
 		final String sql = "delete from user where cd_user = ?";
-		
+
 		try (PreparedStatement ps = connection.prepareStatement(sql)) {
 			ps.setInt(1, userId);
 
@@ -141,9 +144,9 @@ public class UserDAO {
 
 		final String sql = "UPDATE user SET ds_password = ? WHERE ds_email = ? ";
 
-		try (PreparedStatement ps = connection.prepareStatement(sql)){
+		try (PreparedStatement ps = connection.prepareStatement(sql)) {
 			ps.setString(1, newPassword);
-			ps.setString(2,email);
+			ps.setString(2, email);
 
 			ps.executeUpdate();
 		}

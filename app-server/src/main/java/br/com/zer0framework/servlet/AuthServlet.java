@@ -40,6 +40,7 @@ public class AuthServlet extends HttpServlet {
 		super.destroy();
 	}
 
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
 		final PrintWriter out = new PrintWriter(response.getOutputStream());

@@ -13,7 +13,8 @@ import java.util.Map;
 
 @WebServlet("/resetPasswordRequest")
 public class ResetPasswordRequestServlet extends HttpServlet {
-    @Override
+   
+	@Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
      try {
         Map<String, String> map = (Map<String, String>) JSON.parseToMap(HttpRequestUtil.getBody(request));

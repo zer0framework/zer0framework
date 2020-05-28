@@ -20,77 +20,76 @@ import java.util.Properties;
 //TODO precisa de um smtp server
 public class EmailSender {
 
-    private static final String SMTP_SERVER = "smtp server ";
-    private static final String USERNAME = "";
-    private static final String PASSWORD = "";
-    private static final String EMAIL_FROM = "From@gmail.com";
-    private static final String EMAIL_SUBJECT = "PasswordReset";
-    private static final String EMAIL_TEXT = "";
+	private static final String SMTP_SERVER = "smtp server ";
+	private static final String USERNAME = "";
+	private static final String PASSWORD = "";
+	private static final String EMAIL_FROM = "From@gmail.com";
+	private static final String EMAIL_SUBJECT = "PasswordReset";
 
-    public static void sendResetPasswordEmail(String emailTo) {
+	public static void sendResetPasswordEmail(String emailTo) {
 
-        Properties prop = System.getProperties();
-        prop.put("mail.smtp.auth", "true");
-        Session session = Session.getInstance(prop, null);
-        Message msg = new MimeMessage(session);
+		Properties prop = System.getProperties();
+		prop.put("mail.smtp.auth", "true");
+		Session session = Session.getInstance(prop, null);
+		Message msg = new MimeMessage(session);
 
-        try {
-            msg.setFrom(new InternetAddress(EMAIL_FROM));
+		try {
+			msg.setFrom(new InternetAddress(EMAIL_FROM));
 
-            msg.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(emailTo, false));
+			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailTo, false));
 
-            msg.setSubject(EMAIL_SUBJECT);
+			msg.setSubject(EMAIL_SUBJECT);
 
-            String key = SecurityUtil.generateResetPasswordKey(emailTo);
+			String key = SecurityUtil.generateResetPasswordKey(emailTo);
 
-            // HTML email
-            msg.setDataHandler(new DataHandler(new HTMLDataSource(
-                    "<a href=\"http://localhost:8080/paginaComformularioDeResetDeSenha?key="+
-                            key+"/\">Go to reset password page</a>"
-            )));
+			// HTML email
+			msg.setDataHandler(new DataHandler(
+					new HTMLDataSource("<a href=\"http://localhost:8080/paginaComformularioDeResetDeSenha?key=" + key
+							+ "/\">Go to reset password page</a>")));
 
-            SMTPTransport t = (SMTPTransport) session.getTransport("smtp");
+			SMTPTransport t = (SMTPTransport) session.getTransport("smtp");
 
-            // connect
-            t.connect(SMTP_SERVER, USERNAME, PASSWORD);
+			// connect
+			t.connect(SMTP_SERVER, USERNAME, PASSWORD);
 
-            // send
-            t.sendMessage(msg, msg.getAllRecipients());
+			// send
+			t.sendMessage(msg, msg.getAllRecipients());
 
-            t.close();
+			t.close();
 
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-    }
-    static class HTMLDataSource implements DataSource {
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
 
-        private String html;
+	static class HTMLDataSource implements DataSource {
 
-        public HTMLDataSource(String htmlString) {
-            html = htmlString;
-        }
+		private String html;
 
-        @Override
-        public InputStream getInputStream() throws IOException {
-            if (html == null) throw new IOException("html message is null!");
-            return new ByteArrayInputStream(html.getBytes());
-        }
+		public HTMLDataSource(String htmlString) {
+			html = htmlString;
+		}
 
-        @Override
-        public OutputStream getOutputStream() throws IOException {
-            throw new IOException("This DataHandler cannot write HTML");
-        }
+		@Override
+		public InputStream getInputStream() throws IOException {
+			if (html == null)
+				throw new IOException("html message is null!");
+			return new ByteArrayInputStream(html.getBytes());
+		}
 
-        @Override
-        public String getContentType() {
-            return "text/html";
-        }
+		@Override
+		public OutputStream getOutputStream() throws IOException {
+			throw new IOException("This DataHandler cannot write HTML");
+		}
 
-        @Override
-        public String getName() {
-            return "HTMLDataSource";
-        }
-    }
+		@Override
+		public String getContentType() {
+			return "text/html";
+		}
+
+		@Override
+		public String getName() {
+			return "HTMLDataSource";
+		}
+	}
 }

@@ -17,7 +17,6 @@ public class FileDAO {
         this.connection = conn;
     }
 
-    @SuppressWarnings(value = "unchecked")
     public List<File> findAll() throws SQLException {
         return (List<File>) getDataFromResultSet(connection.prepareStatement("SELECT * FROM file"));
     }

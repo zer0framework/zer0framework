@@ -13,7 +13,6 @@ public class PersonDAO {
         this.connection = conn;
     }
 
-    @SuppressWarnings(value = "unchecked")
     public List<Person> findAll() throws SQLException {
         return (List<Person>) getDataFromResultSet(connection.prepareStatement("SELECT * FROM person "));
     }

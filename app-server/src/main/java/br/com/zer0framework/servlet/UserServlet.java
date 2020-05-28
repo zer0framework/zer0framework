@@ -1,12 +1,10 @@
 package br.com.zer0framework.servlet;
 
-import br.com.zer0framework.dao.UserDAO;
-import br.com.zer0framework.jdbc.ConnectionFactory;
-import br.com.zer0framework.model.User;
-import br.com.zer0framework.utils.HttpRequestUtil;
-import br.com.zer0framework.utils.json.JSON;
-import br.com.zer0framework.utils.security.AuthenticationUtil;
-import jdk.nashorn.api.scripting.ScriptUtils;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -15,17 +13,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.util.List;
-import java.util.Map;
+import br.com.zer0framework.dao.UserDAO;
+import br.com.zer0framework.jdbc.ConnectionFactory;
+import br.com.zer0framework.model.User;
+import br.com.zer0framework.utils.HttpRequestUtil;
+import br.com.zer0framework.utils.json.JSON;
+import br.com.zer0framework.utils.security.AuthenticationUtil;
 
-@WebServlet(urlPatterns = {
-		"/api/users",
-		"/api/users/*"
-})
-public class UserServlet extends HttpServlet{
+@WebServlet(urlPatterns = { "/api/users", "/api/users/*" })
+public class UserServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
@@ -33,14 +29,15 @@ public class UserServlet extends HttpServlet{
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 	}
-	
+
 	@Override
 	public void destroy() {
 		super.destroy();
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		final PrintWriter out = response.getWriter();
 		response.setContentType("application/json");
 
@@ -68,7 +65,7 @@ public class UserServlet extends HttpServlet{
 	}
 
 	private void doGetAll(HttpServletResponse response, PrintWriter out) {
-		try(Connection conn = ConnectionFactory.getConnection(false)){
+		try (Connection conn = ConnectionFactory.getConnection(false)) {
 			final UserDAO userDAO = new UserDAO(conn);
 
 			final List<User> users = userDAO.findAll();
@@ -76,7 +73,7 @@ public class UserServlet extends HttpServlet{
 
 			out.print(json);
 			out.flush();
-		} catch (Exception e){
+		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			out.print(e.getMessage());
 			out.flush();
@@ -84,7 +81,7 @@ public class UserServlet extends HttpServlet{
 	}
 
 	private void doGetById(HttpServletResponse response, PrintWriter out, Integer id) {
-		try(Connection conn = ConnectionFactory.getConnection(false)){
+		try (Connection conn = ConnectionFactory.getConnection(false)) {
 			final UserDAO userDAO = new UserDAO(conn);
 
 			final User user = userDAO.findById(id);
@@ -92,7 +89,7 @@ public class UserServlet extends HttpServlet{
 
 			out.print(json);
 			out.flush();
-		} catch (Exception e){
+		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			out.print(e.getMessage());
 			out.flush();
@@ -100,7 +97,7 @@ public class UserServlet extends HttpServlet{
 	}
 
 	private void doGetByUsername(HttpServletResponse response, PrintWriter out, String username) {
-		try(Connection conn = ConnectionFactory.getConnection(false)){
+		try (Connection conn = ConnectionFactory.getConnection(false)) {
 			final UserDAO userDAO = new UserDAO(conn);
 
 			final User user = userDAO.findByUsername(username);
@@ -108,25 +105,22 @@ public class UserServlet extends HttpServlet{
 
 			out.print(json);
 			out.flush();
-		} catch (Exception e){
+		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			out.print(e.getMessage());
 			out.flush();
 		}
 	}
-	/**
-	 * Alterar um usuario
-	 */
+
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		final PrintWriter out = response.getWriter();
 		response.setContentType("application/json");
 
-		try(Connection conn = ConnectionFactory.getConnection(true)){
+		try (Connection conn = ConnectionFactory.getConnection(true)) {
 			// TODO impedir que o mesmo ID seja adicionado
-			try{
+			try {
 				final UserDAO userDAO = new UserDAO(conn);
 				final String json = HttpRequestUtil.getBody(request);
 
@@ -139,27 +133,25 @@ public class UserServlet extends HttpServlet{
 
 				user.setPassword(hashedPassword);
 
-				user.setPersonId( Integer.valueOf( (String) parsedMap.get("personId")));
+				user.setPersonId(Integer.valueOf((String) parsedMap.get("personId")));
 
 				user.setUsername((String) parsedMap.get("username"));
 
 				userDAO.insert(user);
 				response.setStatus(201);
 
-			} catch (Exception e){
+			} catch (Exception e) {
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				e.printStackTrace();
 				conn.rollback();
 			}
 
-		} catch (Exception e){
+		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			e.printStackTrace();		
+			e.printStackTrace();
 		}
 	}
-	/**
-	 * Excluir usuario
-	 */
+
 	@Override
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -169,22 +161,22 @@ public class UserServlet extends HttpServlet{
 
 		try {
 			String[] x = request.getRequestURI().split("/");
-			try{
-			id = Integer.valueOf(x[3]);
-			}catch (IndexOutOfBoundsException e){
+			try {
+				id = Integer.valueOf(x[3]);
+			} catch (IndexOutOfBoundsException e) {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				out.print("Id must be informed");
 			}
 
-			try(Connection conn = ConnectionFactory.getConnection(false)) {
-				try{
+			try (Connection conn = ConnectionFactory.getConnection(false)) {
+				try {
 					final UserDAO userDAO = new UserDAO(conn);
 
 					if (userDAO.deleteById(id)) {
 						conn.commit();
-						response.setStatus(HttpServletResponse.SC_OK);	
+						response.setStatus(HttpServletResponse.SC_OK);
 					} else {
-						response.setStatus(HttpServletResponse.SC_NOT_FOUND);					
+						response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 					}
 
 				} catch (Exception e) {
@@ -198,5 +190,5 @@ public class UserServlet extends HttpServlet{
 		}
 	}
 
-	//TODO doPut
+	// TODO doPut
 }
