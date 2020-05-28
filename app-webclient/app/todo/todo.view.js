@@ -11,7 +11,9 @@ class TodoView {
   getTemplate() {
 	return `
 		<form id="todoForm">
-			<input id="todoInput" type="text" placeholder="Add todo"><button>Submit</button>
+      <input id="todoInput" type="text" placeholder="Add todo">
+      <br></br>
+      <button>Submit</button>
 		</form>
 		<ul id="todoList" class="todo-list">
 		</ul>

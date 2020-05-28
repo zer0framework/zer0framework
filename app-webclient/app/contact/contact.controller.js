@@ -16,10 +16,16 @@ class ContactController {
     onInit(param) {
         this.model.onInit(param);
         this.view.onInit(param);
+
+        this.view.bindSubmitContact(this.handleAddContact)
     }
 
     getView() {
         return this.view;
+    }
+
+    handleAddContact = (surname, forname, telefone) => {
+        this.model.addContact(surname, forname, telefone);
     }
 }
 
