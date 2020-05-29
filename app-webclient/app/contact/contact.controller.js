@@ -13,11 +13,20 @@ class ContactController {
         this.view = view
     }
 
-    onInit(param) {
-        this.model.onInit(param);
-        this.view.onInit(param);
+    onInit() {
+        this.model.onInit();
+        this.view.onInit();
 
+        this.model.bindContactListChanged(this.onContactListChanged)
         this.view.bindSubmitContact(this.handleAddContact)
+
+        this.onContactListChanged(this.model.contacts)
+    }
+
+    onContactListChanged = contacts => {
+        if (contacts != undefined) {
+            this.view.displayContacts(contacts);
+        }
     }
 
     getView() {

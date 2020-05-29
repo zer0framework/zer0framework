@@ -5,10 +5,27 @@
  */
 class ContactModel {
 
-    constructor() {
+    constructor() {}
+
+    onInit() {
+        this.getData();
     }
 
-    onInit() { }
+    getData() {
+        window.fetch(url, {
+                method: 'GET',
+                headers: { 'Authorization': localStorage.getItem('token') }
+            })
+            .then(response => response.json())
+            .then(json => {
+                this.onContactListChanged(json);
+            });
+
+    }
+
+    bindContactListChanged(callback) {
+        this.onContactListChanged = callback;
+    }
 
     commit(contact) {
         this.create(contact);
@@ -26,12 +43,16 @@ class ContactModel {
     }
 
     create(contact) {
-        window.fetch('http://localhost:8080/api/contacts', {
+        window.fetch(url, {
             method: 'POST',
             headers: { 'Authorization': localStorage.getItem('token') },
             body: JSON.stringify(contact)
         }).then(response => {
+            this.getData();
             return response;
         })
     }
+
 }
+
+let url = 'http://localhost:8080/api/contacts'
