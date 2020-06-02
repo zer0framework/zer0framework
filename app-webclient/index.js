@@ -1,89 +1,72 @@
 const routes = {
-  '/': homepageController,
-  '/index.html': homepageController,
-  '/contact': contactController,
-  '/files': filesController,
-  '/post': postController,
-  '/todo': todoController,
+    '/login': loginController,
+    '/': homepageController,
+    '/index.html': homepageController,
+    '/contact': contactController,
+    '/files': filesController,
+    '/post': postController,
+    '/todo': todoController,
 };
-
 
 if (localStorage.getItem('token') != null) {
 
-  document.body.innerHTML = getTemplate();
-  loadCSS('styles.css');
+    document.body.innerHTML = getTemplate();
 
-  let contentDiv = document.getElementById('content');
+    let contentDiv = document.getElementById('content');
 
-  window.onpopstate = () => {
     contentDiv.innerHTML = routes[window.location.pathname];
-    alert(window.location.pathname)
-  }
-
-  contentDiv.innerHTML = routes[window.location.pathname];
-  alert(window.location.pathname)
 
 } else {
-  window.history.pushState({}, 'Login', window.location.origin + '/login');
-  loadCSS('login/login.styles.css');
-  loginController.onInit();
-  document.body.innerHTML = loginController.getView().getTemplate();
+    window.history.pushState({}, 'Login', window.location.origin + '/login');
+    document.body.innerHTML = loginController.getView().getTemplate();
+    routes['/login'].onInit();
 }
 
 onNavItemClick = (pathName) => {
-  if (localStorage.getItem('token') != null) {
+    if (localStorage.getItem('token') != null) {
 
-    window.history.pushState({}, pathName, window.location.origin + pathName);
+        window.history.pushState({}, pathName, window.location.origin + pathName);
 
-    contentDiv = document.getElementById('content');
+        contentDiv = document.getElementById('content');
 
-    if (typeof routes[pathName] === 'string' || routes[pathName] instanceof String) {
-      contentDiv.innerHTML = routes[pathName];
-    } else {
-      const currentRoute = pathName.split('/')[1];
-      const pathRoute = '/' + currentRoute;
-      const pathParam = pathName.split('/')[2];
+        const currentRoute = pathName.split('/')[1];
+        const pathRoute = '/' + currentRoute;
+        const pathParam = pathName.split('/')[2];
 
-      let todo = document.getElementById('todo');
-      let post = document.getElementById('post');
-      let contact = document.getElementById('contact');
-      let files = document.getElementById('files');
+        let todo = document.getElementById('todo');
+        let post = document.getElementById('post');
+        let contact = document.getElementById('contact');
+        let files = document.getElementById('files');
 
-      todo.classList.remove("active");
-      post.classList.remove("active");
-      contact.classList.remove("active");
-      files.classList.remove("active");
+        todo.classList.remove("active");
+        post.classList.remove("active");
+        contact.classList.remove("active");
+        files.classList.remove("active");
 
-      if (pathName === "/") {
-        loadCSS('app/homepage/homepage.styles.css');
-        contentDiv.innerHTML = routes[pathRoute].getView().getTemplate();
-        routes[pathRoute].onInit(pathParam);
-      } else {
-        loadCSS('app/' + currentRoute + pathRoute + '.styles.css');
         let element = document.getElementById(currentRoute);
-        element.classList.add("active");
         contentDiv.innerHTML = routes[pathRoute].getView().getTemplate();
         routes[pathRoute].onInit(pathParam);
-      }
+        if (pathName != "/") {
+            element.classList.add("active");
+        }
+    } else {
+        alert('User unauthorized');
     }
-  } else {
-    alert('User unauthorized');
-  }
 }
 
 
 
 logout = () => {
-  window.history.pushState({}, 'Login', window.location.origin + '/login');
-  localStorage.removeItem('token');
-  localStorage.removeItem('userId');
-  loadCSS('login/login.styles.css');
-  loginController.onInit();
-  document.body.innerHTML = loginController.getView().getTemplate();
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+
+    window.history.pushState({}, 'Login', window.location.origin + '/login');
+    document.body.innerHTML = loginController.getView().getTemplate();
+    loginController.onInit();
 }
 
 function getTemplate() {
-  return `
+    return `
   <!-- NAVBAR -->
   <nav class="navbar">
     <div class="navbar-left-item navbar-item"><a href="#" onclick="onNavItemClick('/'); return false;">App Name</a>
@@ -114,18 +97,10 @@ function getTemplate() {
   `;
 }
 
-window.onbeforeunload = function () {
-  localStorage.removeItem('token');
-  localStorage.removeItem('userId');
-  return null;
+window.onbeforeunload = function() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    return null;
 };
-
-function loadCSS(url) {
-  var lnk = document.createElement('link');
-  lnk.setAttribute('type', "text/css");
-  lnk.setAttribute('rel', "stylesheet");
-  lnk.setAttribute('href', url);
-  document.getElementsByTagName("head").item(0).appendChild(lnk);
-}
 
 const index = getTemplate();

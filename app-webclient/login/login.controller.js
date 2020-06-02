@@ -13,9 +13,15 @@ class LoginController {
         this.view = view
     }
 
-    onInit(param) {
-        this.model.onInit(param);
-        this.view.onInit(param);
+    onInit() {
+        this.model.onInit();
+        this.view.onInit();
+
+        this.view.bindLogin(this.handleLogin);
+    }
+
+    handleLogin = (username, password) => {
+        this.model.authenticate(username, password);
     }
 
     getView() {
