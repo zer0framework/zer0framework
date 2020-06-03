@@ -8,56 +8,49 @@
  */
 class PostController {
 
-  constructor(model, view) {
-    this.model = model
-    this.view = view
-  }
-
-  onInit(param) {
-    this.model.onInit(param);
-    this.view.onInit(param);
-    // Explicit this binding
-    this.model.bindPostListChanged(this.onPostListChanged)
-    this.view.bindSubmitPost(this.handlePost)
-    this.view.bindDeletePost(this.handleDeletePost)
-
-    // Display initial posts
-    this.onPostListChanged(this.model.posts)
-  }
-
-  onPostListChanged = posts => {
-    if (posts != undefined) {
-      this.view.displayPosts(posts);
+    constructor(model, view) {
+        this.model = model
+        this.view = view
     }
-  }
 
-  handlePost = (postId, postTitle, postBody) => {
-    if (postId != "") {
-      this.handleEditPost(postId, postTitle, postBody)
-    } else {
-      this.handleAddPost(postId, postTitle, postBody)
+    onInit(param) {
+        this.model.onInit(param);
+        this.view.onInit(param);
+
+        this.model.bindPostListChanged(this.onPostListChanged)
+        this.view.bindSubmitPost(this.handlePost)
+        this.view.bindDeletePost(this.handleDeletePost)
     }
-  }
 
-  handleAddPost = (postId, postTitle, postBody) => {
-    this.model.addPost(postId, postTitle, postBody);
-  }
+    onPostListChanged = posts => {
+        if (posts != undefined) {
+            this.view.displayPosts(posts);
+        }
+    }
 
-  handleEditPost = (postId, postTitle, postBody) => {
-    this.model.editPost(postId, postTitle, postBody)
-  }
+    handlePost = (postId, postTitle, postBody) => {
+        if (postId != "") {
+            this.handleEditPost(postId, postTitle, postBody)
+        } else {
+            this.handleAddPost(postTitle, postBody)
+        }
+    }
 
-  handleDeletePost = id => {
-    this.model.deletePost(id)
-  }
+    handleAddPost = (postTitle, postBody) => {
+        this.model.addPost(postTitle, postBody);
+    }
 
-  handleTogglePost = id => {
-    this.model.togglePost(id)
-  }
+    handleEditPost = (postId, postTitle, postBody) => {
+        this.model.editPost(postId, postTitle, postBody)
+    }
 
-  getView() {
-    return this.view;
-  }
+    handleDeletePost = id => {
+        this.model.deletePost(id)
+    }
+
+    getView() {
+        return this.view;
+    }
 
 }
 

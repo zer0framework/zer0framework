@@ -48,6 +48,8 @@ public class PostServlet extends HttpServlet {
 			doGetAll(response, out);
 		} else if (id != null) {
 			doGetById(response, out, id);
+		} else {
+			doGetById(request, response, out);
 		}
 	}
 
@@ -72,6 +74,23 @@ public class PostServlet extends HttpServlet {
 			final PostDAO postDAO = new PostDAO(conn);
 
 			final Post post = postDAO.findById(id);
+			final String json = JSON.jsonify(post);
+
+			out.print(json);
+			out.flush();
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			out.print(e.getMessage());
+			out.flush();
+		}
+	}
+	
+	public void doGetById(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
+		try (Connection conn = ConnectionFactory.getConnection(true)) {
+			final PostDAO postDAO = new PostDAO(conn);
+
+			final Integer id = Integer.valueOf(request.getParameter("userId"));
+			final List<Post> post = postDAO.findAllByUserId(id);
 			final String json = JSON.jsonify(post);
 
 			out.print(json);

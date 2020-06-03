@@ -40,6 +40,17 @@ public class PostDAO {
 		return result;
 	}
 
+	public List<Post> findAllByUserId(Integer userId) throws SQLException {
+		final String sql = "select * from post where cd_user = ?";
+		try (PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setInt(1, userId);
+			return getPostsFromResultSet(ps);
+		} catch (Exception e) {
+			return null;
+		}
+
+	}
+
 	protected List<Post> getPostsFromResultSet(PreparedStatement ps) throws SQLException {
 
 		final List<Post> result = new ArrayList<>();
@@ -99,6 +110,6 @@ public class PostDAO {
 			ps.setInt(1, id);
 
 			return ps.executeUpdate() > 0;
-	    }
+		}
 	}
 }
