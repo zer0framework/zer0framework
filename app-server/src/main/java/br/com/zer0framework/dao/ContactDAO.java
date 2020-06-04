@@ -47,6 +47,17 @@ public class ContactDAO {
 
 		return result;
 	}
+	
+	public List<Contact> findAllByUserId(Integer userId) throws SQLException {
+		final String sql = "select * from contact where cd_user = ?";
+		try (PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setInt(1, userId);
+			return getContactsFromResultSet(ps);
+		} catch (Exception e) {
+			return null;
+		}
+
+	}
 
 	protected List<Contact> getContactsFromResultSet(PreparedStatement ps) throws SQLException {
 		final List<Contact> result = new ArrayList<>();

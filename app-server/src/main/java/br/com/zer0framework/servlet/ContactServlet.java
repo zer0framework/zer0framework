@@ -52,6 +52,8 @@ public class ContactServlet extends HttpServlet {
 			doGetAll(response, out);
 		} else if (id != null) {
 			doGetById(response, out, id);
+		} else {
+			doGetByUserId(request, response, out);
 		}
 	}
 
@@ -76,6 +78,23 @@ public class ContactServlet extends HttpServlet {
 			final ContactDAO contactDAO = new ContactDAO(conn);
 
 			final Contact contact = contactDAO.findById(id);
+			final String json = JSON.jsonify(contact);
+
+			out.print(json);
+			out.flush();
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			out.print(e.getMessage());
+			out.flush();
+		}
+	}
+
+	public void doGetByUserId(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
+		try (Connection conn = ConnectionFactory.getConnection(true)) {
+			final ContactDAO contactDAO = new ContactDAO(conn);
+
+			final Integer id = Integer.valueOf(request.getParameter("userId"));
+			final List<Contact> contact = contactDAO.findAllByUserId(id);
 			final String json = JSON.jsonify(contact);
 
 			out.print(json);

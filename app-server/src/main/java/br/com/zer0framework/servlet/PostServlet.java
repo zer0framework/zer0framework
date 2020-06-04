@@ -49,7 +49,7 @@ public class PostServlet extends HttpServlet {
 		} else if (id != null) {
 			doGetById(response, out, id);
 		} else {
-			doGetById(request, response, out);
+			doGetByUserId(request, response, out);
 		}
 	}
 
@@ -85,7 +85,7 @@ public class PostServlet extends HttpServlet {
 		}
 	}
 	
-	public void doGetById(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
+	public void doGetByUserId(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
 		try (Connection conn = ConnectionFactory.getConnection(true)) {
 			final PostDAO postDAO = new PostDAO(conn);
 

@@ -12,8 +12,7 @@ body {
 div,
 nav,
 footer,
-a,
-button {
+a {
     display: flex;
     flex-direction: column;
     color: var(--darkergrey);
@@ -26,10 +25,26 @@ h3 {
     font-weight: 400;
 }
 
+[type="text"] {
+    display: inline-block;
+    -webkit-appearance: none;
+    padding: .5rem 1rem;
+    font-size: 1rem;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
 button {
-    display: flex;
-    border: none;
-    padding: 0;
+    display: inline-block;
+    text-align: center;
+    padding: .5rem 1rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    background: #007bff;
+    color: white;
+    border: 2px solid #007bff;
+    margin: 0 .5rem;
 }
 
 a {

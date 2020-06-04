@@ -20,7 +20,6 @@ class ContactController {
         this.model.bindContactListChanged(this.onContactListChanged)
         this.view.bindSubmitContact(this.handleAddContact)
 
-        this.onContactListChanged(this.model.contacts)
     }
 
     onContactListChanged = contacts => {
@@ -35,6 +34,14 @@ class ContactController {
 
     handleAddContact = (surname, forname, telefone) => {
         this.model.addContact(surname, forname, telefone);
+    }
+
+    handleEditContact = (id, surname, forname, telefone) => {
+        this.model.editContact(id, surname, forname, telefone);
+    }
+
+    handleDeleteContact = (id) => {
+        this.model.deleteContact(id);
     }
 }
 

@@ -1,43 +1,18 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box
-}
- 
 form {
-  margin-bottom: 2rem;
-}
-
-[type="text"],
-button {
-  display: inline-block;
-  -webkit-appearance: none;
-  padding: .5rem 1rem;
-  font-size: 1rem;
-  border: 2px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  cursor: pointer;
-  background: #007bff;
-  color: white;
-  border: 2px solid #007bff;
-  margin: 0 .5rem;
+    margin-bottom: 2rem;
 }
 
 [type="text"] {
-  width: 100%;
+    width: 100%;
 }
 
 [type="text"]:active,
 [type="text"]:focus {
-  outline: 0;
-  border: 2px solid #007bff;
+    outline: 0;
+    border: 2px solid #007bff;
 }
 
 [type="checkbox"] {
-  margin-right: 1rem;
-  font-size: 2rem;
+    margin-right: 1rem;
+    font-size: 2rem;
 }
- 
