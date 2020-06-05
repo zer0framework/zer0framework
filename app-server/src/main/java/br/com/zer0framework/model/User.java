@@ -23,6 +23,8 @@ public class User {
     public User() {
     }
 
+
+
     public Integer getId() {
         return id;
     }

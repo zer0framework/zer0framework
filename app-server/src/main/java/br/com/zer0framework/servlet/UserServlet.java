@@ -119,7 +119,6 @@ public class UserServlet extends HttpServlet {
 		response.setContentType("application/json");
 
 		try (Connection conn = ConnectionFactory.getConnection(true)) {
-			// TODO impedir que o mesmo ID seja adicionado
 			try {
 				final UserDAO userDAO = new UserDAO(conn);
 				final String json = HttpRequestUtil.getBody(request);
@@ -137,7 +136,13 @@ public class UserServlet extends HttpServlet {
 
 				user.setUsername((String) parsedMap.get("username"));
 
-				userDAO.insert(user);
+				try {
+					userDAO.insert(user);
+				}catch (Exception e){
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+					throw new IllegalArgumentException("person id ja existente");
+				}
+
 				response.setStatus(201);
 
 			} catch (Exception e) {
@@ -190,5 +195,27 @@ public class UserServlet extends HttpServlet {
 		}
 	}
 
-	// TODO doPut
+	@Override
+	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try (Connection conn = ConnectionFactory.getConnection(true)) {
+			final UserDAO userDAO = new UserDAO(conn);
+			final Map<String, String> map = (Map<String, String>) JSON.parseToMap(HttpRequestUtil.getBody(request));
+
+			User user = new User();
+
+			String plainPassword = (String) map.get("password");
+			String hashedPassword = AuthenticationUtil.generatePasswordHash(plainPassword);
+
+			user.setPassword(hashedPassword);
+
+			user.setPersonId(Integer.valueOf((String) map.get("personId")));
+
+			user.setUsername((String) map.get("username"));
+
+			userDAO.update(user);
+			response.setStatus(HttpServletResponse.SC_OK);
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+	}
 }

@@ -80,7 +80,6 @@ public class PersonDAO {
         if (person.getId() == null){
             throw new IllegalArgumentException("Cannot update null person");
         }
-        //Ha necessidade de fazer o update da data?
         String sql = "UPDATE person SET nm_person = ?, dt_birthdate = ?, ds_job = ?, cd_person_manager = ? WHERE cd_person = ?";
 
         try(PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {

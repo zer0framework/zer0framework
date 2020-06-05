@@ -28,6 +28,7 @@ public class ResetPasswordServlet extends HttpServlet {
             SecurityUtil.validateResetPasswordKey(key);
         }catch (Exception e){
             response.setStatus(401);
+            return;
         }
         String userEmail = SecurityUtil.getEmailFromResetPasswordKey(key);
 
