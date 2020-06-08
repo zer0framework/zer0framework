@@ -8,20 +8,32 @@
  */
 class FilesController {
 
-  constructor(model, view) {
-    this.model = model
-    this.view = view
-  }
+    constructor(model, view) {
+        this.model = model
+        this.view = view
+    }
 
-  onInit() {
-    this.model.onInit();
-    this.view.onInit();
+    onInit() {
+        this.model.onInit();
+        this.view.onInit();
 
-  }
+        this.view.bindFile();
 
-  getView() {
-    return this.view;
-  }
+    }
+
+    handleFiles(files) {
+        let confirm = window.confirm('Do you want to upload the files?')
+
+        if (confirm === true) {
+            for (var i = 0; i < files.length; i++) {
+                this.model.upload(files[i])
+            }
+        }
+    }
+
+    getView() {
+        return this.view;
+    }
 
 }
 

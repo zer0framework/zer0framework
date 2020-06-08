@@ -13,7 +13,7 @@ class HomepageController {
         this.view = view
     }
 
-    onInit(param) {
+    onInit() {
         this.model.onInit();
         this.view.onInit();
     }
