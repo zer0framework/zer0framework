@@ -27,7 +27,6 @@ class LoginModel {
                     alert('username or password is incorrect');
                     return null;
                 }
-
             })
             .then(data => {
                 if (data != null) {

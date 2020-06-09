@@ -9,24 +9,23 @@ class LoginView {
 
     getTemplate() {
         return `
-    <div class="login-page">
-        <div class="form">
-            <form class="login-form">
-            <input id="username" type="text" placeholder="username" />
-            <input id="password" type="password" placeholder="password" />
-            <input type="button" name="login" id="loginBtn" value="login"">
-            <p class="message">Not registered? <a href="#">Create an account</a></p>
-            <a class="message" href="#">Forgot password?</a>
-            </form>
+        <div class="loginPage">
+            <div class="loginDiv">
+                <form class="loginForm">
+                <input id="loginUsername" type="text" placeholder="Username" />
+                <input id="loginPassword" type="password" placeholder="Password"/>
+                <input type="button" id="loginBtn" value="Login">
+                <p class="message">Not registered? <a href="#">Create an account</a></p>
+                <a class="message" href="#">Forgot password?</a>
+                </form>
+            </div>
         </div>
-    </div>
         `;
     }
 
     onInit() {
-        this.loginForm = this.getElement('#login-form');
-        this.username = this.getElement('#username');
-        this.password = this.getElement('#password');
+        this.username = this.getElement('#loginUsername');
+        this.password = this.getElement('#loginPassword');
     }
 
     getElement(selector) {
@@ -38,6 +37,7 @@ class LoginView {
     bindLogin(handler) {
         document.getElementById('loginBtn').addEventListener('click', event => {
             handler(this.username.value, this.password.value)
+            return event;
         })
     }
 

@@ -25,7 +25,8 @@ h3 {
     font-weight: 400;
 }
 
-[type="text"] {
+[type="text"],
+[type="password"] {
     display: inline-block;
     -webkit-appearance: none;
     padding: .5rem 1rem;
@@ -34,7 +35,8 @@ h3 {
     border-radius: 4px;
 }
 
-button {
+button,
+[type="button"] {
     display: inline-block;
     text-align: center;
     padding: .5rem 1rem;
