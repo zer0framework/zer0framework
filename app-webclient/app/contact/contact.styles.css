@@ -22,9 +22,11 @@ tr:nth-child(even) {
 .contactEdit {
     width: 40%;
     height: 50%;
+    padding: .5rem 0rem;
 }
 
 .contactDelete {
     width: 40%;
     height: 50%;
+    padding: .5rem 0rem;
 }

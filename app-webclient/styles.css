@@ -27,6 +27,7 @@ h3 {
 
 [type="text"],
 [type="password"] {
+    width: 100%;
     display: inline-block;
     -webkit-appearance: none;
     padding: .5rem 1rem;

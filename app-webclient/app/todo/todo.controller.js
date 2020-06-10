@@ -7,48 +7,47 @@
  * @param view
  */
 class TodoController {
-  
-  constructor(model, view) {
-    this.model = model
-    this.view = view
-  }
 
-  onInit() {
-    this.view.onInit();
-    // Explicit this binding
-    this.model.bindTodoListChanged(this.onTodoListChanged)
-    this.view.bindAddTodo(this.handleAddTodo)
-    this.view.bindEditTodo(this.handleEditTodo)
-    this.view.bindDeleteTodo(this.handleDeleteTodo)
-    this.view.bindToggleTodo(this.handleToggleTodo)
+    constructor(model, view) {
+        this.model = model
+        this.view = view
+    }
 
-    // Display initial todos
-    this.onTodoListChanged(this.model.todos)
-  }
+    onInit() {
+        this.view.onInit();
 
-  onTodoListChanged = todos => {
-    this.view.displayTodos(todos)
-  }
+        this.model.bindTodoListChanged(this.onTodoListChanged)
+        this.view.bindAddTodo(this.handleAddTodo)
+        this.view.bindEditTodo(this.handleEditTodo)
+        this.view.bindDeleteTodo(this.handleDeleteTodo)
+        this.view.bindToggleTodo(this.handleToggleTodo)
 
-  handleAddTodo = todoText => {
-    this.model.addTodo(todoText)
-  }
+        this.onTodoListChanged(this.model.todos)
+    }
 
-  handleEditTodo = (id, todoText) => {
-    this.model.editTodo(id, todoText)
-  }
+    onTodoListChanged = todos => {
+        this.view.displayTodos(todos)
+    }
 
-  handleDeleteTodo = id => {
-    this.model.deleteTodo(id)
-  }
+    handleAddTodo = todoText => {
+        this.model.addTodo(todoText)
+    }
 
-  handleToggleTodo = id => {
-    this.model.toggleTodo(id)
-  }
+    handleEditTodo = (id, todoText) => {
+        this.model.editTodo(id, todoText)
+    }
 
-  getView() {
-    return this.view;
-  }
+    handleDeleteTodo = id => {
+        this.model.deleteTodo(id)
+    }
+
+    handleToggleTodo = id => {
+        this.model.toggleTodo(id)
+    }
+
+    getView() {
+        return this.view;
+    }
 
 }
 
