@@ -1,9 +1,9 @@
 package br.com.zer0framework.servlet;
 
-import br.com.zer0framework.email.EmailSender;
+
+import br.com.zer0framework.email.EmailService;
 import br.com.zer0framework.utils.HttpRequestUtil;
 import br.com.zer0framework.utils.json.JSON;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,17 +15,17 @@ import java.util.Map;
 public class ResetPasswordRequestServlet extends HttpServlet {
    
 	@Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response){
      try {
         Map<String, String> map = (Map<String, String>) JSON.parseToMap(HttpRequestUtil.getBody(request));
 
         String email = map.get("email");
 
-        EmailSender.sendResetPasswordEmail(email);
+         EmailService.sendEmail("Password Reset",email);
 
-        response.setStatus(200);
      }catch (Exception e){
          response.setStatus(500);
      }
+        response.setStatus(200);
     }
 }
