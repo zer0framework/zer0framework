@@ -55,12 +55,15 @@ public class UserServlet extends HttpServlet {
 			}
 		}
 
+		String email = request.getParameter("email");
 		if (split == null) {
 			doGetAll(response, out);
 		} else if (id != null) {
 			doGetById(response, out, id);
 		} else if (username != null) {
 			doGetByUsername(response, out, username);
+		} else {
+			doGetByEmail(response, out, email);
 		}
 	}
 
@@ -112,6 +115,22 @@ public class UserServlet extends HttpServlet {
 		}
 	}
 
+	private void doGetByEmail(HttpServletResponse response, PrintWriter out, String email) {
+		try (Connection conn = ConnectionFactory.getConnection(false)) {
+			final UserDAO userDAO = new UserDAO(conn);
+
+			final User user = userDAO.findByEmail(email);
+			final String json = JSON.jsonify(user);
+
+			out.print(json);
+			out.flush();
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			out.print(e.getMessage());
+			out.flush();
+		}
+	}
+
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -136,9 +155,11 @@ public class UserServlet extends HttpServlet {
 
 				user.setUsername((String) parsedMap.get("username"));
 
+				user.setEmail((String) parsedMap.get("email"));
+
 				try {
 					userDAO.insert(user);
-				}catch (Exception e){
+				} catch (Exception e) {
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 					throw new IllegalArgumentException("person id ja existente");
 				}
@@ -196,21 +217,25 @@ public class UserServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPut(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		try (Connection conn = ConnectionFactory.getConnection(true)) {
 			final UserDAO userDAO = new UserDAO(conn);
 			final Map<String, String> map = (Map<String, String>) JSON.parseToMap(HttpRequestUtil.getBody(request));
 
 			User user = new User();
 
+			user.setUsername((String) map.get("username"));
+
 			String plainPassword = (String) map.get("password");
 			String hashedPassword = AuthenticationUtil.generatePasswordHash(plainPassword);
-
 			user.setPassword(hashedPassword);
 
 			user.setPersonId(Integer.valueOf((String) map.get("personId")));
 
-			user.setUsername((String) map.get("username"));
+			user.setEmail((String) map.get("email"));
+
+			user.setId(Integer.valueOf((String) map.get("id")));
 
 			userDAO.update(user);
 			response.setStatus(HttpServletResponse.SC_OK);

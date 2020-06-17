@@ -99,6 +99,8 @@ public class PersonServlet extends HttpServlet {
 		}
 	}
 
+	// TODO Implement manager Id.
+	
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) {
 		resp.setContentType("application/json");
@@ -131,9 +133,13 @@ public class PersonServlet extends HttpServlet {
 			final PersonDAO personDAO = new PersonDAO(connection);
 			final Map<String, String> map = (Map<String, String>) JSON.parseToMap(HttpRequestUtil.getBody(req));
 
-			personDAO.update(new Person(Integer.valueOf(map.get("id")), map.get("name"),
-					new SimpleDateFormat("yyyy/MM/dd").parse(map.get("birthdate")), map.get("job"),
-					Integer.valueOf(map.get("managerPersonId"))));
+			Person person = new Person();
+			person.setName(map.get("name"));
+			person.setId(Integer.valueOf(map.get("id")));
+			person.setBirthdate(new SimpleDateFormat("yyyy/MM/dd").parse(map.get("birthdate")));
+			person.setJob(map.get("job"));
+
+			personDAO.update(person);
 
 			resp.setStatus(HttpServletResponse.SC_OK);
 		} catch (Exception e) {

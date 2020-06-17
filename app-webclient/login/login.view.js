@@ -16,7 +16,7 @@ class LoginView {
                 <input id="loginPassword" type="password" placeholder="Password"/>
                 <input type="button" id="loginBtn" value="Login">
                 <p class="message">Not registered? <a href="#">Create an account</a></p>
-                <a class="message" href="#">Forgot password?</a>
+                <p class="message" id="resetText" onClick="resetPassword()">Forgot password?</p>
                 </form>
             </div>
         </div>
@@ -41,4 +41,10 @@ class LoginView {
         })
     }
 
+}
+
+resetPassword = () => {
+    window.history.pushState({}, 'Reset Password', window.location.origin + '/');
+    document.body.innerHTML = resetController.getView().getTemplate();
+    resetController.onInit();
 }

@@ -63,8 +63,26 @@ public class SecurityUtil {
 		}
 		return null;
 	}
+	
+	public static String encryptor(String toEncrypt) {
+		try {
+			setSecretKey();
 
-	private static String decryptor(String strToDecrypt) {
+			long expiration = new Date(System.currentTimeMillis() + 7200000).getTime();
+
+			String str = toEncrypt + ":" + expiration;
+
+			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+			return Base64.getEncoder().encodeToString(cipher.doFinal(str.getBytes(StandardCharsets.UTF_8)));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+
+	public static String decryptor(String strToDecrypt) {
 		try {
 			setSecretKey();
 			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");

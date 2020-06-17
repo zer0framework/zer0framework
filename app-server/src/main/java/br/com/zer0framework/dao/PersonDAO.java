@@ -80,15 +80,14 @@ public class PersonDAO {
         if (person.getId() == null){
             throw new IllegalArgumentException("Cannot update null person");
         }
-        String sql = "UPDATE person SET nm_person = ?, dt_birthdate = ?, ds_job = ?, cd_person_manager = ? WHERE cd_person = ?";
+        String sql = "UPDATE person SET nm_person = ?, dt_birthdate = ?, ds_job = ? WHERE cd_person = ?";
 
         try(PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, person.getName());
-            ps.setDate(2, (Date) person.getBirthdate());
+            ps.setDate(2, new java.sql.Date(person.getBirthdate().getTime()));
             ps.setString(3, person.getJob());
-            ps.setInt(4, person.getManagerPersonId());
-            ps.setInt(5, person.getId());
+            ps.setInt(4, person.getId());
 
             ps.executeUpdate();
         }

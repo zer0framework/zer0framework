@@ -37,18 +37,25 @@ public class UserDAO {
 		return result;
 	}
 
-	public List<User> findAll() {
-		List<User> result = null;
-		try {
-			PreparedStatement ps = connection.prepareStatement("select * from user");
-			result = getUsersFromResultSet(ps);
-		} catch (Exception e) {
-			e.getMessage();
+	public User findByEmail(String email) throws SQLException {
+		User result = null;
+
+		final String sql = "select * from user where ds_email = ?";
+
+		try (PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setString(1, email);
+			final List<User> usersFromResultSet = getUsersFromResultSet(ps);
+			if (!usersFromResultSet.isEmpty()) {
+				final User obj = (User) usersFromResultSet.get(0);
+				if (obj != null) {
+					result = obj;
+				}
+			}
 		}
 
 		return result;
 	}
-
+	
 	public User findById(Integer id) throws SQLException {
 		User result = null;
 
@@ -62,6 +69,18 @@ public class UserDAO {
 					result = obj;
 				}
 			}
+		}
+
+		return result;
+	}
+
+	public List<User> findAll() {
+		List<User> result = null;
+		try {
+			PreparedStatement ps = connection.prepareStatement("select * from user");
+			result = getUsersFromResultSet(ps);
+		} catch (Exception e) {
+			e.getMessage();
 		}
 
 		return result;
@@ -107,12 +126,9 @@ public class UserDAO {
 
 	public void update(User user) throws SQLException {
 		if (user.getId() == null) {
-			throw new IllegalArgumentException("User is null, not possible to update!");
-		}
-		if (user.getId() == null) {
 			throw new IllegalArgumentException("User id is null, not possible to update!");
 		}
-		String sql = "update user set ds_username = ?, ds_password = ?, cd_person = ?, ds_email where cd_user = ?;";
+		String sql = "update user set ds_username = ?, ds_password = ?, cd_person = ?, ds_email = ? where cd_user = ?;";
 
 		try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
