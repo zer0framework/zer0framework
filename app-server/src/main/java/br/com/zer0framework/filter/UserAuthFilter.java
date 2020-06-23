@@ -23,9 +23,10 @@ public class UserAuthFilter implements Filter {
 
 	public void init(FilterConfig filterConfig) {
 		this.filterConfig = filterConfig;
-	} 
+	}
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
 		final HttpServletResponse res = (HttpServletResponse) response;
 		final HttpServletRequest req = (HttpServletRequest) request;
 
@@ -35,22 +36,29 @@ public class UserAuthFilter implements Filter {
 		}
 
 		if (token == null || token.trim().isEmpty()) {
+			if 	((req.getRequestURL().toString().substring(0, 31).equals("http://localhost:8080/api/users") && req.getMethod().equals("POST")) ||
+					req.getRequestURL().toString().substring(0, 32).equals("http://localhost:8080/api/person")) {
+					res.setStatus(200);
+					filterChain.doFilter(request, response);
+					return;
+			}
 			res.setStatus(401);
 			return;
 		}
 
 		try {
-            if (SecurityUtil.validateToken(token)) {
-                res.setStatus(200);
-                filterChain.doFilter(request, response);
-            } else {
-                res.setStatus(401);
-            }
-        }catch (NumberFormatException e){
-		    res.setStatus(401);
-        }
+			if (SecurityUtil.validateToken(token)) {
+				res.setStatus(200);
+				filterChain.doFilter(request, response);
+			} else {
+				res.setStatus(401);
+			}
+		} catch (NumberFormatException e) {
+			res.setStatus(401);
+		}
 
 	}
+
 	@Override
 	public void destroy() {
 

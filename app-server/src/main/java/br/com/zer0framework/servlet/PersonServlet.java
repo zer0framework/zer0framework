@@ -102,7 +102,8 @@ public class PersonServlet extends HttpServlet {
 	// TODO Implement manager Id.
 	
 	@Override
-	public void doPost(HttpServletRequest req, HttpServletResponse resp) {
+	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		final PrintWriter pw = resp.getWriter();
 		resp.setContentType("application/json");
 
 		try (Connection conn = ConnectionFactory.getConnection()) {
@@ -120,6 +121,8 @@ public class PersonServlet extends HttpServlet {
 			personDAO.insert(new Person(null, (String) map.get("name"),
 					new SimpleDateFormat("yyyy/MM/dd").parse((String) map.get("birthdate")), (String) map.get("job"), i,
 					null));
+			pw.print(json);
+			pw.flush();
 			resp.setStatus(HttpServletResponse.SC_CREATED);
 		} catch (Exception e) {
 			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

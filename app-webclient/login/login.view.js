@@ -15,7 +15,7 @@ class LoginView {
                 <input id="loginUsername" type="text" placeholder="Username" />
                 <input id="loginPassword" type="password" placeholder="Password"/>
                 <input type="button" id="loginBtn" value="Login">
-                <p class="message">Not registered? <a href="#">Create an account</a></p>
+                <p class="message">Not registered? <p id="create" onClick="register()">Create an account</p></p>
                 <p class="message" id="resetText" onClick="resetPassword()">Forgot password?</p>
                 </form>
             </div>
@@ -47,4 +47,10 @@ resetPassword = () => {
     window.history.pushState({}, 'Reset Password', window.location.origin + '/');
     document.body.innerHTML = resetController.getView().getTemplate();
     resetController.onInit();
+}
+
+register = () => {
+    window.history.pushState({}, 'Register', window.location.origin + '/');
+    document.body.innerHTML = registerController.getView().getTemplate();
+    registerController.onInit();
 }

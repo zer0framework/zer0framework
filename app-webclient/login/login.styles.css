@@ -36,9 +36,10 @@
     font-size: 12px;
 }
 
-.loginDiv .message a {
+#create {
     color: #4CAF50;
     text-decoration: none;
+    font-size: 12px;
 }
 
 .container {
@@ -73,7 +74,8 @@
     font-size: 12px;
 }
 
-#resetText {
+#resetText,
+#create {
     cursor: pointer;
 }
 

@@ -68,9 +68,7 @@ public class PersonDAO {
                 ps.setNull(4, Types.INTEGER);
             }
 
-
             ps.executeUpdate();
-
         }catch (SQLException e){
             e.printStackTrace();
         }
