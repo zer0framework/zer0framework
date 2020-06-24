@@ -10,56 +10,57 @@ class RegisterModel {
     onInit() {}
 
     register(name, birthdate, job, username, password, email) {
-        const newPerson = {
+        const personUser = {
             name: name,
             birthdate: birthdate,
             job: job,
-        };
-        const newUser = {
             username: username,
             password: password,
             email: email
         }
-        this.checkUsernameAvailability(newPerson, newUser)
+        this.checkUsernameAvailability(personUser)
     }
 
-    checkUsernameAvailability(newPerson, newUser) {
-        window.fetch('http://localhost:8080/checkUser/' + newUser.username, {
+    checkUsernameAvailability(personUser) {
+        window.fetch('http://localhost:8080/checkUserAvailability/' + personUser.username, {
                 method: 'GET',
             }).then(response => response.json())
             .then(json => {
                 if (json === true) {
-                    this.createPerson(newPerson, newUser)
+                    this.createPerson(personUser)
                 }
             });
     }
 
-    createPerson(person, user) {
-        window.fetch('http://localhost:8080/api/person', {
+    createPerson(personUser) {
+        window.fetch('http://localhost:8080/register/person', {
             method: 'POST',
-            body: JSON.stringify(person)
+            body: JSON.stringify(personUser)
         }).then(response => {
-            this.getPersonId(person, user)
+            this.getPersonId(personUser)
             return response
         })
     }
 
-    getPersonId(person, user) {
-        window.fetch('http://localhost:8080/api/person/' + person.name, {
+    getPersonId(personUser) {
+        window.fetch('http://localhost:8080/checkPersonId/' + personUser.name, {
                 method: 'GET',
             }).then(response => response.text())
             .then(data => {
-                user.personId = (JSON.parse(data).id)
-                this.createUser(user)
+                personUser.personId = data
+                this.createUser(personUser)
             });
     }
 
-    createUser(user) {
-        window.fetch('http://localhost:8080/api/users', {
+    createUser(personUser) {
+        window.fetch('http://localhost:8080/register/user', {
             method: 'POST',
-            body: JSON.stringify(user)
+            body: JSON.stringify(personUser)
         }).then(response => {
-            return response
+            if (response.status === 201) {
+                document.body.innerHTML = loginController.getView().getTemplate();
+                loginController.getView().onInit();
+            }
         })
     }
 }
