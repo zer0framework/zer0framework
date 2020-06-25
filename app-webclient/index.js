@@ -25,13 +25,17 @@ if (localStorage.getItem('token') != null) {
 onNavItemClick = (pathName) => {
     if (localStorage.getItem('token') != null) {
 
-        window.history.pushState({}, pathName, window.location.origin + pathName);
-
         contentDiv = document.getElementById('content');
 
         const currentRoute = pathName.split('/')[1];
         const pathRoute = '/' + currentRoute;
         const pathParam = pathName.split('/')[2];
+
+        if (pathRoute === '/contact') {
+            window.history.pushState({}, pathName, window.location.origin + pathName + '/1');
+        } else {
+            window.history.pushState({}, pathName, window.location.origin + pathName)
+        }
 
         let todo = document.getElementById('todo');
         let post = document.getElementById('post');

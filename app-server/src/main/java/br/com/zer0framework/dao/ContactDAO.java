@@ -58,6 +58,18 @@ public class ContactDAO {
 		}
 
 	}
+	
+	public List<Contact> findPagination(Integer userId, Integer offset) throws SQLException {
+		final String sql = "select * from contact where cd_user = ? limit 10 offset ?";
+		try (PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setInt(1, userId);
+			ps.setInt(2, offset);
+			return getContactsFromResultSet(ps);
+		} catch (Exception e) {
+			return null;
+		}
+
+	}
 
 	protected List<Contact> getContactsFromResultSet(PreparedStatement ps) throws SQLException {
 		final List<Contact> result = new ArrayList<>();
