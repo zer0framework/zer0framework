@@ -27,6 +27,10 @@ class ContactView {
     <th>Telefone</th>
     <th id="clmButtons"></th>
     </tr>
+    </table>
+    <br>
+    <button id="return">Return</button>
+    <button id="next">Next</button>
       `;
     }
 
@@ -37,6 +41,8 @@ class ContactView {
         this.contactTelefone = this.getElement('#contactTelefone');
         this.contacts = this.getElement('#contacts')
 
+        this.bindReturn();
+        this.bindNext();
     }
 
     resetInput() {
@@ -121,6 +127,28 @@ class ContactView {
             handler(this.contactForename.value, this.contactSurname.value, this.contactTelefone.value);
             this.resetInput();
         });
+    }
+
+    bindReturn() {
+        document.getElementById('return').addEventListener('click', function() {
+            var currentPage = parseInt(document.URL.split('/')[4])
+            var lastPage = currentPage - 1
+            if (lastPage != 0) {
+                window.history.pushState({}, '/contact', window.location.origin + '/contact/' + lastPage);
+                document.getElementById('content').innerHTML = contactController.getView().getTemplate();
+                contactController.onInit();
+            }
+        })
+    }
+
+    bindNext() {
+        document.getElementById('next').addEventListener('click', function() {
+            var currentPage = parseInt(document.URL.split('/')[4])
+            var nextPage = currentPage + 1
+            window.history.pushState({}, '/contact', window.location.origin + '/contact/' + nextPage);
+            document.getElementById('content').innerHTML = contactController.getView().getTemplate();
+            contactController.onInit();
+        })
     }
 
 }

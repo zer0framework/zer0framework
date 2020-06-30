@@ -12,7 +12,8 @@ class ContactModel {
     }
 
     getData() {
-        window.fetch(contactUrl + '/?userId=' + localStorage.getItem('userId'), {
+        var offset = (document.URL.split('/')[4]) * 10 - 10
+        window.fetch(contactUrl + '/?userId=' + localStorage.getItem('userId') + '&offset=' + offset, {
                 method: 'GET',
                 headers: { 'Authorization': localStorage.getItem('token') }
             })

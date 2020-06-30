@@ -16,8 +16,8 @@ import br.com.zer0framework.dao.UserDAO;
 import br.com.zer0framework.jdbc.ConnectionFactory;
 import br.com.zer0framework.model.User;
 
-@WebServlet(urlPatterns = { "/checkUser", "/checkUser/*" })
-public class CheckUserServlet extends HttpServlet {
+@WebServlet(urlPatterns = {"/checkUserAvailability/*"})
+public class CheckUserAvailabilityServlet extends HttpServlet {
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {

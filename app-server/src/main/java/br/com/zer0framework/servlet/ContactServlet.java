@@ -48,7 +48,9 @@ public class ContactServlet extends HttpServlet {
 			}
 		}
 
-		if (split == null) {
+		if (request.getParameter("offset") != null) {
+			doGetPagination(request, response, out);
+		} else if (split == null) {
 			doGetAll(response, out);
 		} else if (id != null) {
 			doGetById(response, out, id);
@@ -95,6 +97,24 @@ public class ContactServlet extends HttpServlet {
 
 			final Integer id = Integer.valueOf(request.getParameter("userId"));
 			final List<Contact> contact = contactDAO.findAllByUserId(id);
+			final String json = JSON.jsonify(contact);
+
+			out.print(json);
+			out.flush();
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			out.print(e.getMessage());
+			out.flush();
+		}
+	}
+
+	public void doGetPagination(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
+		try (Connection conn = ConnectionFactory.getConnection(true)) {
+			final ContactDAO contactDAO = new ContactDAO(conn);
+
+			final Integer id = Integer.valueOf(request.getParameter("userId"));
+			final Integer offset = Integer.valueOf(request.getParameter("offset"));
+			final List<Contact> contact = contactDAO.findPagination(id, offset);
 			final String json = JSON.jsonify(contact);
 
 			out.print(json);
