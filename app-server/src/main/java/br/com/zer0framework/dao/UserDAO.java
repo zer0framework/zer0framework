@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.zer0framework.enums.Role;
 import br.com.zer0framework.model.User;
 
 public class UserDAO {
@@ -100,6 +101,11 @@ public class UserDAO {
 				obj.setPersonId(rs.getInt("cd_person"));
 				obj.setEmail(rs.getString("ds_email"));
 				obj.setCreated(rs.getDate("dh_created"));
+				if(rs.getString("ds_role").equals("ADMIN")){
+					obj.setRole(Role.ADMIN);
+				}else{
+					obj.setRole(Role.USER);
+				}
 			}
 		}
 

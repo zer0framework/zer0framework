@@ -1,5 +1,7 @@
 package br.com.zer0framework.utils;
 
+import br.com.zer0framework.enums.Role;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
@@ -67,5 +69,16 @@ public class HttpRequestUtil {
 			}
 		}
 		return null;
+	}
+
+	public static Role getUserRoleFromToken(String token){
+		String role = token.split(";")[1];
+		if (role == "USER" || role == "user"){
+			return Role.USER;
+		}else
+			if(role == "ADMIN" || role == "admin"){
+				return Role.ADMIN;
+		}
+			return null;
 	}
 }

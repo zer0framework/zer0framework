@@ -1,5 +1,6 @@
 package br.com.zer0framework.servlet;
 
+import br.com.zer0framework.utils.HttpRequestUtil;
 import br.com.zer0framework.utils.security.SecurityUtil;
 
 import javax.servlet.annotation.WebServlet;
@@ -26,7 +27,7 @@ public class RefreshTokenServlet extends HttpServlet {
         }catch (Exception e){
             resp.setStatus(403);
         }
-        pw.println("{\"newToken\":\""+SecurityUtil.encryptor(userId)+"\"}");
+        pw.println("{\"newToken\":\""+SecurityUtil.encryptor(userId, HttpRequestUtil.getUserRoleFromToken(currentToken))+"\"}");
         resp.setStatus(200);
     }
 }

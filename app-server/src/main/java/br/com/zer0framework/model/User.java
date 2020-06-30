@@ -1,5 +1,7 @@
 package br.com.zer0framework.model;
 
+import br.com.zer0framework.enums.Role;
+
 import java.util.Date;
 
 public class User {
@@ -10,20 +12,20 @@ public class User {
     private Integer personId;
     private Date created;
     private String email;
+    private Role role;
 
-    public User(Integer id, String username, String password, Integer personId, Date created, String email) {
+    public User(Integer id, String username, String password, Integer personId, Date created, String email, Role role) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.personId = personId;
         this.created = created;
         this.email = email;
+        this.role=role;
     }
 
     public User() {
     }
-
-
 
     public Integer getId() {
         return id;
@@ -69,5 +71,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

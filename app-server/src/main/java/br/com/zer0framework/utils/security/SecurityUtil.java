@@ -1,5 +1,7 @@
 package br.com.zer0framework.utils.security;
 
+import br.com.zer0framework.enums.Role;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -47,7 +49,7 @@ public class SecurityUtil {
 		}
 	}
 
-	public static String encryptor(Integer toEncrypt) {
+	public static String encryptor(Integer toEncrypt, Role role) {
 		try {
 			setSecretKey();
 
@@ -57,7 +59,7 @@ public class SecurityUtil {
 
 			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-			return Base64.getEncoder().encodeToString(cipher.doFinal(str.getBytes(StandardCharsets.UTF_8)));
+			return role+";"+Base64.getEncoder().encodeToString(cipher.doFinal(str.getBytes(StandardCharsets.UTF_8)));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -87,7 +89,7 @@ public class SecurityUtil {
 			setSecretKey();
 			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
 			cipher.init(Cipher.DECRYPT_MODE, secretKey);
-			return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)), StandardCharsets.UTF_8);
+			return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt.split(";")[1])), StandardCharsets.UTF_8);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

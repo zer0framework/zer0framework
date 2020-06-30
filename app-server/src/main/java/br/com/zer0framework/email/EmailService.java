@@ -21,7 +21,7 @@ public class EmailService {
             /**
              * credenciais da maquina
              */
-            ExchangeCredentials credentials = new WebCredentials("f0fp1103", "Rvp@624857gh");
+            ExchangeCredentials credentials = new WebCredentials("", "");
             service.setCredentials(credentials);
         } catch (Exception e) {
             e.printStackTrace();
