@@ -18,9 +18,6 @@ public class EmailService {
         try {
             service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);
             service.setUrl(new URI("https://webexchange.t-systems.com.br/EWS/Exchange.asmx"));
-            /**
-             * credenciais da maquina
-             */
             ExchangeCredentials credentials = new WebCredentials("", "");
             service.setCredentials(credentials);
         } catch (Exception e) {
